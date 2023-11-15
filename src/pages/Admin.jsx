@@ -5,7 +5,7 @@ import { BiImageAdd } from 'react-icons/bi'
 import { AiOutlineFileImage } from 'react-icons/ai'
 
 import '../styles/admin.scss'
-import { addOld, createNew, deleteItems, fetchOriginals, fetchReplicas, fetchRestored, findImages, updateItem, updateItemAndImages } from "../http/itemApi";
+import { addOld, createNew, deleteItems, fetchOriginals, fetchReplicas, fetchRestored, findImages, updateItemAndImages } from "../http/itemApi";
 
 const Admin = () => {
     const [isChecked, setIsChecked] = useState(false)

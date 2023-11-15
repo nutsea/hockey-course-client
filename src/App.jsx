@@ -34,7 +34,7 @@ function App() {
             if (!currentUrl.includes('item'))
             document.getElementById(`${type}`).classList.add('Lined')
         }
-    })
+    }, [currentUrl, type])
 
     const isAdmin = () => {
         return currentUrl === '/admin/' || currentUrl === '/admin'

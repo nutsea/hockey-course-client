@@ -104,7 +104,6 @@ export const Catalogue = observer(({ type }) => {
     }, [type])
 
     const handleNavigate = (item) => {
-        // navigate(`/item/${e.target.id}`)
         const links = document.getElementsByClassName('HType')
         for (let i of links) {
             i.classList.remove('Lined')
@@ -407,7 +406,6 @@ export const Catalogue = observer(({ type }) => {
                         break
 
                     case 3:
-                        console.log(111)
                         buttons[0].classList.remove('E-inactive')
                         buttons[3].classList.add('E-this')
                         buttons[last + 1].classList.remove('E-inactive')
@@ -426,7 +424,13 @@ export const Catalogue = observer(({ type }) => {
         } catch (e) {
 
         }
-    }, [catalogue, thisP])
+    }, [catalogue, thisP, last, nextP, prevP])
+
+    useEffect(() => {
+        catalogue.setPage(1)
+        fetchFilteredData()
+        // eslint-disable-next-line
+    }, [type])
 
     return (
         <div className="Catalogue">

@@ -10,6 +10,7 @@ import { IoIosArrowUp } from 'react-icons/io'
 import sizes1 from '../assets/images/Sizes1.jpeg'
 import sizes2 from '../assets/images/Sizes2.png'
 import sizes3 from '../assets/images/Sizes3.jpeg'
+import { dealAdd } from "../http/bxApi";
 
 const Item = () => {
     const { id, code } = useParams()
@@ -316,6 +317,10 @@ const Item = () => {
         }
     }
 
+    const createDeal = () => {
+        dealAdd()
+    }
+
     return (
         <div className="ItemContainer">
             {!loading ?
@@ -490,7 +495,7 @@ const Item = () => {
                         <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
                         <div className="BuyInfo form"><span className="form">Количество: </span>{count}</div>
                         <div className="BuyInfo BuyCost form">Стоимость: {item.price * count} Р</div>
-                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`}>ОФОРМИТЬ ЗАКАЗ</div>
+                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАКАЗ</div>
                     </div>
                 </div>
             }
