@@ -28,7 +28,7 @@ const Admin = () => {
         bend: '',
         rigidity: '',
         count: '',
-        restore: '',
+        renew: '',
         file: null,
         files: null
     })
@@ -218,7 +218,7 @@ const Admin = () => {
             bend: '',
             rigidity: '',
             count: '',
-            restore: '',
+            renew: '',
             file: null,
             files: null
         })
@@ -229,7 +229,7 @@ const Admin = () => {
 
     const createNewItem = () => {
         if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.count && data.file && data.files) {
-            createNew(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.count, data.restore, data.file, data.files)
+            createNew(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.count, data.renew, data.file, data.files)
                 .then(() => {
                     if (chosen === 'original') {
                         setOriginals(null)
@@ -268,8 +268,8 @@ const Admin = () => {
     }
 
     const createOldItem = () => {
-        if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.restore) {
-            addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.restore)
+        if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.renew) {
+            addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.renew)
                 .then(() => {
                     if (chosen === 'original') {
                         setOriginals(null)
@@ -318,7 +318,7 @@ const Admin = () => {
     }
 
     const changeConfirm = () => {
-        updateItemAndImages(changeItem.id, changeItem.code, changeItem.brand, changeItem.name, changeItem.description, changeItem.price, changeItem.grip, changeItem.bend, changeItem.rigidity, changeItem.count, changeItem.restore, newImages.file, newImages.files, deleteImages)
+        updateItemAndImages(changeItem.id, changeItem.code, changeItem.brand, changeItem.name, changeItem.description, changeItem.price, changeItem.grip, changeItem.bend, changeItem.rigidity, changeItem.count, changeItem.renew, newImages.file, newImages.files, deleteImages)
             .then(() => {
                 if (chosen === 'original') {
                     setOriginals(null)
@@ -1007,7 +1007,7 @@ const Admin = () => {
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.bend}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.rigidity}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.price}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.restore}</td>
+                                                                                                <td onClick={() => changeItemClick(item)}>{item.renew}</td>
                                                                                             </tr>
                                                                                         )
                                                                                     })}
@@ -1039,7 +1039,7 @@ const Admin = () => {
                                                                 <div className="InputClue">Жесткость</div>
                                                                 <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={changeItem.rigidity} onChange={handleChangeItem} />
                                                                 <div className="InputClue">Ремонт</div>
-                                                                <input type="text" placeholder="Ремонт" name="restore" maxLength={250} value={changeItem.restore} onChange={handleChangeItem} />
+                                                                <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={changeItem.renew} onChange={handleChangeItem} />
                                                                 <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
                                                                 <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
                                                             </div>
@@ -1072,7 +1072,7 @@ const Admin = () => {
                                                     <div className="InputClue">Жесткость</div>
                                                     <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={data.rigidity} onChange={handleChange} />
                                                     <div className="InputClue">Ремонт</div>
-                                                    <input type="text" placeholder="Ремонт" name="restore" maxLength={250} value={data.restore} onChange={handleChange} />
+                                                    <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={data.renew} onChange={handleChange} />
                                                     <div className="CreateWarning restWarning">Заполните все поля!</div>
                                                     <div className="CreateItemBtn" onClick={createOldItem}>Создать</div>
                                                     <div className="CreateCancelItemBtn" onClick={cancelCreate}>Отменить</div>

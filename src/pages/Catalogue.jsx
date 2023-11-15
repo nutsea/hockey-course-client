@@ -20,6 +20,8 @@ export const Catalogue = observer(({ type }) => {
     const { catalogue } = useContext(Context)
     const [loading, setLoading] = useState(true)
     const [itemsLoading, setItemsLoading] = useState(false)
+    const [pages, setPages] = useState(0)
+
 
     const fetchData = async () => {
         setLoading(true)
@@ -38,6 +40,7 @@ export const Catalogue = observer(({ type }) => {
 
             await fetchItems(catalogue.brands, catalogue.grips, catalogue.bends, catalogue.rigidities, type, catalogue.min, catalogue.max, catalogue.limit, catalogue.page).then((data) => {
                 catalogue.setItems(data)
+                setPages(Math.ceil(data.count / catalogue.limit))
                 setLoading(false)
             })
         })
@@ -45,7 +48,6 @@ export const Catalogue = observer(({ type }) => {
 
     const fetchFilteredData = () => {
         setItemsLoading(true)
-        console.log(catalogue.brandsSet)
         fetchItems(
             catalogue.brandsSet.length > 0 ? catalogue.brandsSet : catalogue.brands,
             catalogue.gripsSet.length > 0 ? catalogue.gripsSet : catalogue.grips,
@@ -109,6 +111,322 @@ export const Catalogue = observer(({ type }) => {
         }
         navigate(`/item/${item.id}/${item.code}`)
     }
+
+    let first = 1,
+        last = pages,
+        thisP = catalogue.page,
+        nextP = catalogue.page + 1,
+        prevP = catalogue.page - 1
+
+    const handlePagination = (e) => {
+        const thisE = document.getElementById(`${e.target.id}`)
+        const hide_1_2 = document.querySelector('.Hide-1-2')
+        const hide_29_30 = document.querySelector('.Hide-29-30')
+        const buttons = document.getElementsByClassName('E-pag')
+        for (let i of buttons) {
+            i.classList.remove('E-this')
+        }
+
+        switch (e.target.id) {
+            case 'left':
+                if (prevP !== 0) {
+                    thisP--
+                    nextP--
+                    prevP--
+                }
+                break
+
+            case 'right':
+                if (nextP !== last + 1) {
+                    thisP++
+                    prevP++
+                    nextP++
+                }
+                break
+
+            case 'first':
+                thisP = first
+                nextP = first + 1
+                prevP = first - 1
+                break
+
+            case 'mid1':
+                thisP = Number(thisE.innerText)
+                nextP = thisP + 1
+                prevP = thisP - 1
+                break
+
+            case 'mid2':
+                thisP = Number(thisE.innerText)
+                nextP = thisP + 1
+                prevP = thisP - 1
+                break
+
+            case 'mid3':
+                thisP = Number(thisE.innerText)
+                nextP = thisP + 1
+                prevP = thisP - 1
+                break
+
+            case 'last':
+                thisP = last
+                prevP = last - 1
+                nextP = last + 1
+                break
+
+            default:
+                break
+        }
+
+        catalogue.setPage(Number(thisP))
+        fetchFilteredData()
+
+        if (last > 5) {
+            switch (thisP) {
+                case 1:
+                    hide_1_2.classList.add('Removed')
+                    hide_29_30.classList.remove('Removed')
+                    buttons[0].classList.add('E-inactive')
+                    buttons[1].classList.add('E-this')
+                    buttons[2].innerText = '2'
+                    buttons[3].innerText = '3'
+                    buttons[4].innerText = '4'
+                    buttons[6].classList.remove('E-inactive')
+                    break
+
+                case last:
+                    hide_29_30.classList.add('Removed')
+                    hide_1_2.classList.remove('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].innerText = `${last - 3}`
+                    buttons[3].innerText = `${last - 2}`
+                    buttons[4].innerText = `${last - 1}`
+                    buttons[5].classList.add('E-this')
+                    buttons[6].classList.add('E-inactive')
+                    break
+
+                case 2:
+                    hide_1_2.classList.add('Removed')
+                    hide_29_30.classList.remove('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].classList.add('E-this')
+                    buttons[2].innerText = '2'
+                    buttons[3].innerText = '3'
+                    buttons[4].innerText = '4'
+                    buttons[6].classList.remove('E-inactive')
+                    break
+
+                case last - 1:
+                    hide_29_30.classList.add('Removed')
+                    hide_1_2.classList.remove('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].innerText = `${last - 3}`
+                    buttons[3].innerText = `${last - 2}`
+                    buttons[4].innerText = `${last - 1}`
+                    buttons[4].classList.add('E-this')
+                    buttons[6].classList.remove('E-inactive')
+                    break
+
+                case 3:
+                    hide_1_2.classList.add('Removed')
+                    hide_29_30.classList.remove('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].innerText = `${prevP}`
+                    buttons[3].classList.add('E-this')
+                    buttons[3].innerText = `${thisP}`
+                    buttons[4].innerText = `${nextP}`
+                    buttons[6].classList.remove('E-inactive')
+                    break
+
+                case last - 2:
+                    hide_1_2.classList.remove('Removed')
+                    hide_29_30.classList.add('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].innerText = `${prevP}`
+                    buttons[3].classList.add('E-this')
+                    buttons[3].innerText = `${thisP}`
+                    buttons[4].innerText = `${nextP}`
+                    buttons[6].classList.remove('E-inactive')
+                    break
+
+                default:
+                    hide_1_2.classList.remove('Removed')
+                    hide_29_30.classList.remove('Removed')
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].innerText = `${prevP}`
+                    buttons[3].classList.add('E-this')
+                    buttons[3].innerText = `${thisP}`
+                    buttons[4].innerText = `${nextP}`
+                    buttons[6].classList.remove('E-inactive')
+                    break
+            }
+        } else {
+            switch (thisP) {
+                case 1:
+                    buttons[0].classList.add('E-inactive')
+                    buttons[1].classList.add('E-this')
+                    buttons[last + 1].classList.remove('E-inactive')
+                    break
+
+                case last:
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[last].classList.add('E-this')
+                    buttons[last + 1].classList.add('E-inactive')
+                    break
+
+                case 2:
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[2].classList.add('E-this')
+                    buttons[last + 1].classList.remove('E-inactive')
+                    break
+
+                case 3:
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[3].classList.add('E-this')
+                    buttons[last + 1].classList.remove('E-inactive')
+                    break
+
+                case 4:
+                    buttons[0].classList.remove('E-inactive')
+                    buttons[4].classList.add('E-this')
+                    buttons[last + 1].classList.remove('E-inactive')
+                    break
+
+                default:
+                    break
+            }
+        }
+    }
+
+    useEffect(() => {
+        try {
+            const hide_1_2 = document.querySelector('.Hide-1-2')
+            const hide_29_30 = document.querySelector('.Hide-29-30')
+            const buttons = document.getElementsByClassName('E-pag')
+            for (let i of buttons) {
+                i.classList.remove('E-this')
+            }
+
+            if (last > 5) {
+                switch (thisP) {
+                    case 1:
+                        hide_1_2.classList.add('Removed')
+                        hide_29_30.classList.remove('Removed')
+                        buttons[0].classList.add('E-inactive')
+                        buttons[1].classList.add('E-this')
+                        buttons[2].innerText = '2'
+                        buttons[3].innerText = '3'
+                        buttons[4].innerText = '4'
+                        buttons[6].classList.remove('E-inactive')
+                        break
+
+                    case last:
+                        hide_29_30.classList.add('Removed')
+                        hide_1_2.classList.remove('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].innerText = `${last - 3}`
+                        buttons[3].innerText = `${last - 2}`
+                        buttons[4].innerText = `${last - 1}`
+                        buttons[5].classList.add('E-this')
+                        buttons[6].classList.add('E-inactive')
+                        break
+
+                    case 2:
+                        hide_1_2.classList.add('Removed')
+                        hide_29_30.classList.remove('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].classList.add('E-this')
+                        buttons[2].innerText = '2'
+                        buttons[3].innerText = '3'
+                        buttons[4].innerText = '4'
+                        buttons[6].classList.remove('E-inactive')
+                        break
+
+                    case last - 1:
+                        hide_29_30.classList.add('Removed')
+                        hide_1_2.classList.remove('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].innerText = `${last - 3}`
+                        buttons[3].innerText = `${last - 2}`
+                        buttons[4].innerText = `${last - 1}`
+                        buttons[4].classList.add('E-this')
+                        buttons[6].classList.remove('E-inactive')
+                        break
+
+                    case 3:
+                        hide_1_2.classList.add('Removed')
+                        hide_29_30.classList.remove('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].innerText = `${prevP}`
+                        buttons[3].classList.add('E-this')
+                        buttons[3].innerText = `${thisP}`
+                        buttons[4].innerText = `${nextP}`
+                        buttons[6].classList.remove('E-inactive')
+                        break
+
+                    case last - 2:
+                        hide_1_2.classList.remove('Removed')
+                        hide_29_30.classList.add('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].innerText = `${prevP}`
+                        buttons[3].classList.add('E-this')
+                        buttons[3].innerText = `${thisP}`
+                        buttons[4].innerText = `${nextP}`
+                        buttons[6].classList.remove('E-inactive')
+                        break
+
+                    default:
+                        hide_1_2.classList.remove('Removed')
+                        hide_29_30.classList.remove('Removed')
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].innerText = `${prevP}`
+                        buttons[3].classList.add('E-this')
+                        buttons[3].innerText = `${thisP}`
+                        buttons[4].innerText = `${nextP}`
+                        buttons[6].classList.remove('E-inactive')
+                        break
+                }
+            } else {
+                switch (thisP) {
+                    case 1:
+                        buttons[0].classList.add('E-inactive')
+                        buttons[1].classList.add('E-this')
+                        buttons[last + 1].classList.remove('E-inactive')
+                        break
+
+                    case last:
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[last].classList.add('E-this')
+                        buttons[last + 1].classList.add('E-inactive')
+                        break
+
+                    case 2:
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[2].classList.add('E-this')
+                        buttons[last + 1].classList.remove('E-inactive')
+                        break
+
+                    case 3:
+                        console.log(111)
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[3].classList.add('E-this')
+                        buttons[last + 1].classList.remove('E-inactive')
+                        break
+
+                    case 4:
+                        buttons[0].classList.remove('E-inactive')
+                        buttons[4].classList.add('E-this')
+                        buttons[last + 1].classList.remove('E-inactive')
+                        break
+
+                    default:
+                        break
+                }
+            }
+        } catch (e) {
+
+        }
+    }, [catalogue, thisP])
 
     return (
         <div className="Catalogue">
@@ -207,6 +525,19 @@ export const Catalogue = observer(({ type }) => {
                                                     </div>
                                                 );
                                             })}
+                                            {/* {pages > 2 &&
+                                                <div className="E-pagination">
+                                                    <button id="left" className="E-pag E-left E-margin-0 E-inactive" onClick={handlePagination}>➔</button>
+                                                    <button id="first" className="E-pag E-this" onClick={handlePagination}>1</button>
+                                                    <div className="Hide-1-2 Removed">. . .</div>
+                                                    <button id="mid1" className="E-pag E-mid-1" onClick={handlePagination}>2</button>
+                                                    <button id="mid2" className="E-pag" onClick={handlePagination}>3</button>
+                                                    <button id="mid3" className="E-pag E-mid-3" onClick={handlePagination}>4</button>
+                                                    <div className="Hide-29-30">. . .</div>
+                                                    <button id="last" className="E-pag E-last" onClick={handlePagination}>{pages}</button>
+                                                    <button id="right" className="E-pag" onClick={handlePagination}>➔</button>
+                                                </div>
+                                            } */}
                                         </div>
                                         :
                                         <div className="NothingFound">Ничего не найдено</div>
@@ -215,6 +546,35 @@ export const Catalogue = observer(({ type }) => {
                                 :
                                 <div className="LoaderContainer">
                                     <div className="Loader"></div>
+                                </div>
+                            }
+                            {pages > 5 ?
+                                <div className="E-pagination">
+                                    <button id="left" className="E-pag E-left E-margin-0 E-inactive" onClick={handlePagination}>➔</button>
+                                    <button id="first" className="E-pag E-this" onClick={handlePagination}>1</button>
+                                    <div className="Hide-1-2 Removed">. . .</div>
+                                    <button id="mid1" className="E-pag E-mid-1" onClick={handlePagination}>2</button>
+                                    <button id="mid2" className="E-pag" onClick={handlePagination}>3</button>
+                                    <button id="mid3" className="E-pag E-mid-3" onClick={handlePagination}>4</button>
+                                    <div className="Hide-29-30">. . .</div>
+                                    <button id="last" className="E-pag E-last" onClick={handlePagination}>{pages}</button>
+                                    <button id="right" className="E-pag" onClick={handlePagination}>➔</button>
+                                </div>
+                                : (pages > 1) &&
+                                <div className="E-pagination">
+                                    <button id="left" className="E-pag E-left E-margin-0 E-inactive" onClick={handlePagination}>➔</button>
+                                    <button id="first" className="E-pag E-this" onClick={handlePagination}>1</button>
+                                    <button id="mid1" className="E-pag E-mid-1" onClick={handlePagination}>2</button>
+                                    {pages > 2 &&
+                                        <button id="mid2" className="E-pag" onClick={handlePagination}>3</button>
+                                    }
+                                    {pages > 3 &&
+                                        <button id="mid3" className="E-pag E-mid-3" onClick={handlePagination}>4</button>
+                                    }
+                                    {pages > 4 &&
+                                        <button id="last" className="E-pag E-last" onClick={handlePagination}>5</button>
+                                    }
+                                    <button id="right" className="E-pag" onClick={handlePagination}>➔</button>
                                 </div>
                             }
                         </div>
@@ -249,7 +609,7 @@ export const Catalogue = observer(({ type }) => {
                                                                     <td>{item.grip}</td>
                                                                     <td>{item.bend}</td>
                                                                     <td>{item.rigidity}</td>
-                                                                    <td>{item.restore}</td>
+                                                                    <td>{item.renew}</td>
                                                                     <td className="ItemPrice">{item.price} Р</td>
                                                                     <td className="ItemBuy"><div>Купить</div></td>
                                                                 </tr>

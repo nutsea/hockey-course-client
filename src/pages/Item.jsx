@@ -29,6 +29,9 @@ const Item = () => {
     const [chooseRigidity, setChooseRigidity] = useState(null)
     const [tab, setTab] = useState('description')
     const [visible, setVisible] = useState(0)
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const [sendNumber, setSendNumber] = useState('')
+    const [sendName, setSendName] = useState('')
 
     const sortAscending = (arr) => {
         return arr.slice().sort((a, b) => a - b)
@@ -187,6 +190,132 @@ const Item = () => {
         }
     }
 
+    const handleBackspace = (e) => {
+        if (e.keyCode === 8 || e.key === 'Backspace') {
+            e.preventDefault()
+            const cleaned = ('' + e.target.value).replace(/\D/g, '')
+            const match = cleaned.split('')
+            let formattedNumber
+            switch (cleaned.length) {
+                case 10:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}${match[7]}-${match[8]}`
+                    break
+                case 9:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}${match[7]}-`
+                    break
+                case 8:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}`
+                    break
+                case 7:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-`
+                    break
+                case 6:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}`
+                    break
+                case 5:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}`
+                    break
+                case 4:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) `
+                    break
+                case 3:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}`
+                    break
+                case 2:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}`
+                    break
+                case 1:
+                    formattedNumber = !match ? '' : ``
+                    break
+                case 0:
+                    formattedNumber = !match ? '' : ``
+                    break
+
+                default:
+                    break
+            }
+            const newCleaned = ('7' + formattedNumber).replace(/\D/g, '')
+            setPhoneNumber(formattedNumber)
+            setSendNumber(newCleaned)
+        }
+    }
+
+    const handlePhoneChange = (e) => {
+        const formattedNumber = formatPhoneNumber(e)
+        const cleaned = ('' + e.target.value).replace(/\D/g, '')
+        setPhoneNumber(formattedNumber)
+        setSendNumber('7' + cleaned)
+        console.log(cleaned)
+    }
+
+    const formatPhoneNumber = (e) => {
+        const cleaned = ('' + e.target.value).replace(/\D/g, '')
+        setSendNumber('7' + cleaned)
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/)
+        let formattedNumber
+        switch (cleaned.length) {
+            case 10:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`
+                break
+            case 9:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`
+                break
+            case 8:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-`
+                break
+            case 7:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}`
+                break
+            case 6:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-`
+                break
+            case 5:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}`
+                break
+            case 4:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}`
+                break
+            case 3:
+                formattedNumber = !match ? '' : `(${match[1]}) `
+                break
+            case 2:
+                formattedNumber = !match ? '' : `(${match[1]}`
+                break
+            case 1:
+                formattedNumber = !match ? '' : `(${match[1]}`
+                break
+            case 0:
+                formattedNumber = !match ? '' : ``
+                break
+
+            default:
+                break
+        }
+
+        return formattedNumber;
+    }
+
+    const showModal = (e) => {
+        if (e.target.classList.contains('BuyBtnActive')) {
+            document.querySelector('.BuyModal').classList.remove('ModalNone')
+        }
+    }
+
+    const closeModal = (e) => {
+        if (!e.target.classList.contains('form')) {
+            document.querySelector('.BuyModal').classList.add('ModalNone')
+        }
+    }
+
     return (
         <div className="ItemContainer">
             {!loading ?
@@ -196,17 +325,31 @@ const Item = () => {
                             <div className="ItemCard ItemCardOne">
                                 <div className="ItemSlider">
                                     <div className="ImageContainer">
-                                        <div className="SliderBtn SlideLeft" onClick={slideLeft}><IoIosArrowUp className="SlLeft" size={30} /></div>
-                                        {images.map((image, i) => {
-                                            return (
-                                                <>
-                                                    <div key={i} className={`SliderImage Img${i} ${i === 0 ? 'Visible' : ''}`}>
-                                                        <img src={`${process.env.REACT_APP_API_URL + image.img}`} alt="Фото клюшки" />
-                                                    </div>
-                                                </>
-                                            )
-                                        })}
-                                        <div className="SliderBtn SlideRight" onClick={slideRight}><IoIosArrowUp className="SlRight" size={30} /></div>
+                                        {images.length > 0 ?
+                                            <>
+                                                {images.length > 1 &&
+                                                    <div className="SliderBtn SlideLeft" onClick={slideLeft}><IoIosArrowUp className="SlLeft" size={30} /></div>
+                                                }
+                                                {images.map((image, i) => {
+                                                    return (
+                                                        <>
+                                                            <div key={i} className={`SliderImage Img${i} ${i === 0 ? 'Visible' : ''}`}>
+                                                                <img src={`${process.env.REACT_APP_API_URL + image.img}`} alt="Фото клюшки" />
+                                                            </div>
+                                                        </>
+                                                    )
+                                                })}
+                                                {images.length > 1 &&
+                                                    <div className="SliderBtn SlideRight" onClick={slideRight}><IoIosArrowUp className="SlRight" size={30} /></div>
+                                                }
+                                            </>
+                                            :
+                                            <>
+                                                <div className="SliderImage Visible">
+                                                    <img src={`${process.env.REACT_APP_API_URL + item.img}`} alt="Фото клюшки" />
+                                                </div>
+                                            </>
+                                        }
                                     </div>
                                     <div className="SliderDots">
                                         {images.map((image, i) => {
@@ -258,7 +401,7 @@ const Item = () => {
                                         <div className="CountDigit">{count}</div>
                                         <div className="CountBtn" onClick={countPlus}><AiOutlinePlus /></div>
                                     </div>
-                                    <div className="ItemBuy">КУПИТЬ</div>
+                                    <div className={`ItemBuy ${chooseGrip && chooseBend && chooseRigidity ? 'BuyBtnActive' : ''}`} onClick={showModal}>КУПИТЬ</div>
                                 </div>
                             </div>
                             <div className="ItemInfo">
@@ -314,6 +457,41 @@ const Item = () => {
                 :
                 <div className="LoaderContainer">
                     <div className="Loader"></div>
+                </div>
+            }
+            {item &&
+                <div className="BuyModal ModalNone" onClick={closeModal}>
+                    <div className="BuyForm form">
+                        <div className="BuySub form">Оформление заказа</div>
+                        <div className="BuyClue form">Имя</div>
+                        <input className="InputName form" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
+                        <div className="BuyClue form">Номер телефона</div>
+                        <div className="InputContainer form">
+                            <span className="PreNum form">+7&nbsp;</span>
+                            <input
+                                className="InputNumber form"
+                                type="text"
+                                maxLength="15"
+                                value={phoneNumber}
+                                onChange={(e) => {
+                                    handlePhoneChange(e)
+                                }}
+                                onKeyDown={handleBackspace}
+                                placeholder="(999) 999-99-99"
+                            />
+                        </div>
+                        <div className="BuyClue form">Информация о заказе</div>
+                        <div className="BuyInfo form"><span className="form">Артикул: </span>{item.code}</div>
+                        <div className="BuyInfo form"><span className="form">Фирма: </span>{item.brand}</div>
+                        <div className="BuyInfo form"><span className="form">Название: </span>{item.name}</div>
+                        <div className="BuyInfo form"><span className="form">Хват: </span>{chooseGrip}</div>
+                        <div className="BuyInfo form"><span className="form">Загиб: </span>{chooseBend}</div>
+                        <div className="BuyInfo form"><span className="form">Жесткость: </span>{chooseRigidity}</div>
+                        <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
+                        <div className="BuyInfo form"><span className="form">Количество: </span>{count}</div>
+                        <div className="BuyInfo BuyCost form">Стоимость: {item.price * count} Р</div>
+                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`}>ОФОРМИТЬ ЗАКАЗ</div>
+                    </div>
                 </div>
             }
         </div>

@@ -79,7 +79,7 @@ export const deleteItems = async (idArr) => {
     return data
 }
 
-export const addNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, restore, img) => {
+export const addNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img) => {
     const formData = new FormData()
     formData.append('code', code)
     formData.append('brand', brand)
@@ -91,7 +91,7 @@ export const addNew = async (code, brand, name, description, price, grip, bend, 
     formData.append('rigidity', rigidity)
     formData.append('type', type)
     formData.append('count', count)
-    formData.append('restore', restore)
+    formData.append('renew', renew)
     formData.append('img', img)
 
     const { data } = await $host.post('api/item', formData, {
@@ -102,8 +102,8 @@ export const addNew = async (code, brand, name, description, price, grip, bend, 
     return data
 }
 
-// export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, restore, img, files) => {
-//     addNew(code, brand, name, description, price, grip, bend, rigidity, type, count, restore, img).then(async (data) => {
+// export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img, files) => {
+//     addNew(code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img).then(async (data) => {
 //         let item_code = data.id
 //         const formData = new FormData()
 //         formData.append('item_code', item_code)
@@ -123,10 +123,10 @@ export const addNew = async (code, brand, name, description, price, grip, bend, 
 //     })
 // }
 
-export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, restore, img, files) => {
+export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img, files) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await addNew(code, brand, name, description, price, grip, bend, rigidity, type, count, restore, img)
+            await addNew(code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img)
                 .then(async (data) => {
                     let item_code = data.id
                     const formData = new FormData()
@@ -150,13 +150,14 @@ export const createNew = async (code, brand, name, description, price, grip, ben
     })
 }
 
-export const addOld = async (code, brand, name, description, price, grip, bend, rigidity, type, restore) => {
-    const { data } = await $host.post('api/item', { code, brand, name, description, price, grip, bend, rigidity, type, restore })
+export const addOld = async (code, brand, name, description, price, grip, bend, rigidity, type, renew) => {
+    const { data } = await $host.post('api/item', { code, brand, name, description, price, grip, bend, rigidity, type, renew })
     return data
 }
 
-export const updateItem = async (id, code, brand, name, description, price, grip, bend, rigidity, count, restore, img) => {
+export const updateItem = async (id, code, brand, name, description, price, grip, bend, rigidity, count, renew, img) => {
     const formData = new FormData()
+    formData.append('id', id)
     formData.append('code', code)
     formData.append('brand', brand)
     formData.append('name', name)
@@ -166,7 +167,7 @@ export const updateItem = async (id, code, brand, name, description, price, grip
     formData.append('bend', bend)
     formData.append('rigidity', rigidity)
     formData.append('count', count)
-    formData.append('restore', restore)
+    formData.append('renew', renew)
     formData.append('img', img)
 
     const { data } = await $host.post('api/item/update', formData, {
@@ -177,10 +178,10 @@ export const updateItem = async (id, code, brand, name, description, price, grip
     return data
 }
 
-export const updateItemAndImages = async (id, code, brand, name, description, price, grip, bend, rigidity, count, restore, img, images, deleteImages) => {
+export const updateItemAndImages = async (id, code, brand, name, description, price, grip, bend, rigidity, count, renew, img, images, deleteImages) => {
     return new Promise(async (resolve, reject) => {
         try {
-            await updateItem(id, code, brand, name, description, price, grip, bend, rigidity, count, restore, img)
+            await updateItem(id, code, brand, name, description, price, grip, bend, rigidity, count, renew, img)
                 .then(async (data) => {
                     let item_code = data.id
                     const formData = new FormData()

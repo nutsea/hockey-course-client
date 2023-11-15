@@ -8,7 +8,7 @@ export const BrandFilter = observer(() => {
     const [checked, setChecked] = useState([])
 
     const check = (brand) => {
-        const checker = document.querySelector(`.${brand}`)
+        const checker = document.querySelector(`.Brand${brand}`)
         checker.classList.toggle('Checked')
         let newChecked = checked
         if (checker.classList.contains('Checked')) {
@@ -25,7 +25,7 @@ export const BrandFilter = observer(() => {
             {catalogue.brands.map((brand, i) => {
                 return (
                     <div key={i} id={brand} className="BrandChecker" onClick={() => check(brand)}>
-                        <div id={brand} className={`BrandCheckBox ${brand}`}></div>
+                        <div id={brand} className={`BrandCheckBox Brand${brand}`}></div>
                         <div id={brand}>{brand}</div>
                     </div>
                 )
