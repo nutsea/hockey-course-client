@@ -1,90 +1,68 @@
 import $ from 'jquery'
 
-// const dealEndpoint = 'crm.deal.add'
-// const contactEndpoint = 'crm.contact.add'
+export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rigidity, price, count, type) => {
+    const contactData = {
+        fields: {
+            NAME: `${sendName}`,
+            PHONE: [{ VALUE: `+${sendNumber}`, VALUE_TYPE: 'WORK' }]
+        }
+    }
 
-const contactData = {
-    fields: {
-        NAME: 'Имя',
-        PHONE: [{ VALUE: '+79999999999', VALUE_TYPE: 'WORK' }], // Номер телефона клиента
-    },
-}
+    let newType = ' '
+    switch (type) {
+        case 'original':
+            newType = 'оригинал'
+            break
 
-// const dealData = {
-//     fields: {
-//         "TITLE": "ЗАКАЗ С САЙТА",
-//         "TYPE_ID": "GOODS",
-//         "STAGE_ID": "NEW",
-//         "COMPANY_ID": 3,
-//         "CONTACT_ID": 3,
-//         "OPENED": "Y",
-//         "ASSIGNED_BY_ID": 1,
-//         "PROBABILITY": 30,
-//         "CURRENCY_ID": "USD",
-//         "OPPORTUNITY": 5000,
-//         "CATEGORY_ID": 5,
-//         "DESCRIPTION": "Товар: ...\nНомер: 1111111111"
-//     }
-// }
+        case 'replica':
+            newType = 'реплика'
+            break
 
-// export const dealAdd = () => {
-//     $.ajax({
-//         url: process.env.REACT_APP_BX_URL + dealEndpoint,
-//         type: 'POST',
-//         data: JSON.stringify(dealData),
-//         contentType: 'application/json',
-//         success: function (result) {
-//             console.log('Сделка успешно создана:', result)
-//         },
-//         error: function (error) {
-//             console.error('Ошибка при создании сделки:', error)
-//         }
-//     })
-// }
+        case 'restored':
+            newType = 'восстановленный / бу'
+            break
+    
+        default:
+            break
+    }
 
-export const dealAdd = () => {
     $.ajax({
         url: process.env.REACT_APP_BX_URL + 'crm.contact.add',
         type: 'POST',
         data: JSON.stringify(contactData),
         contentType: 'application/json',
         success: function (contactResult) {
-            console.log('Клиент успешно создан:', contactResult);
+            console.log('Клиент успешно создан:', contactResult)
 
-            // Использование CONTACT_ID нового клиента в сделке
             const dealData = {
                 fields: {
                     TITLE: 'ЗАКАЗ С САЙТА',
                     TYPE_ID: 'GOODS',
                     STAGE_ID: 'NEW',
-                    // COMPANY_ID: 3,
-                    CONTACT_ID: contactResult.result, // Используем CONTACT_ID нового клиента
+                    CONTACT_ID: contactResult.result,
                     OPENED: 'Y',
                     ASSIGNED_BY_ID: 1,
-                    // PROBABILITY: 30,
                     CURRENCY_ID: 'RUB',
-                    OPPORTUNITY: 50,
-                    // CATEGORY_ID: 5,
-                    DESCRIPTION: 'Товар: ...\nНомер: 1111111111',
-                },
-            };
+                    OPPORTUNITY: price * count,
+                    COMMENTS: `Артикул: ${code}\nФирма: ${brand}\nНазвание: ${name}\nХват: ${grip}\nЗагиб: ${bend}\nЖесткость: ${rigidity}\nТип: ${newType}\nЦена: ${price}₽\nКоличество: ${count}`
+                }
+            }
 
-            // Создание сделки
             $.ajax({
                 url: process.env.REACT_APP_BX_URL + 'crm.deal.add',
                 type: 'POST',
                 data: JSON.stringify(dealData),
                 contentType: 'application/json',
                 success: function (dealResult) {
-                    console.log('Сделка успешно создана:', dealResult);
+                    console.log('Сделка успешно создана:', dealResult)
                 },
                 error: function (dealError) {
-                    console.error('Ошибка при создании сделки:', dealError);
-                },
-            });
+                    console.error('Ошибка при создании сделки:', dealError)
+                }
+            })
         },
         error: function (contactError) {
-            console.error('Ошибка при создании клиента:', contactError);
-        },
-    });
+            console.error('Ошибка при создании клиента:', contactError)
+        }
+    })
 }

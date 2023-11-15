@@ -102,27 +102,6 @@ export const addNew = async (code, brand, name, description, price, grip, bend, 
     return data
 }
 
-// export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img, files) => {
-//     addNew(code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img).then(async (data) => {
-//         let item_code = data.id
-//         const formData = new FormData()
-//         formData.append('item_code', item_code)
-//         let images = []
-//         for (let i of files) {
-//             images.push(i)
-//         }
-//         images.forEach((image) => {
-//             formData.append('img', image)
-//         })
-//         const { data2 } = await $host.post('api/image', formData, {
-//             headers: {
-//                 'Content-Type': 'multipart/form-data'
-//             }
-//         })
-//         return data2
-//     })
-// }
-
 export const createNew = async (code, brand, name, description, price, grip, bend, rigidity, type, count, renew, img, files) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -199,12 +178,6 @@ export const updateItemAndImages = async (id, code, brand, name, description, pr
                         formData.append('img', image)
                     })
 
-                    // if (images) {
-                    //     for (let i of images) {
-                    //         formData.append('img', i)
-                    //     }
-                    // }
-
                     console.log(newImages)
 
                     const { data: data2 } = await $host.post('api/image', formData, {
@@ -229,4 +202,9 @@ export const updateItemAndImages = async (id, code, brand, name, description, pr
             reject(error)
         }
     })
+}
+
+export const orderItems = (id, count) => {
+    const { data } = $host.post('api/item/buy', { id, count })
+    return data
 }

@@ -12,8 +12,9 @@ import BrandFilter from "../components/BrandFilter";
 import GripFilter from "../components/GripFilter";
 import BendFilter from "../components/BendFilter";
 import RigidityFilter from "../components/RigidityFilter";
-import { fetchBends, fetchBrands, fetchGrips, fetchItems, fetchMax, fetchRigidities } from "../http/itemApi";
+import { fetchBends, fetchBrands, fetchGrips, fetchItems, fetchMax, fetchRigidities, orderItems } from "../http/itemApi";
 import { useNavigate } from "react-router-dom";
+import { dealAdd } from "../http/bxApi";
 
 export const Catalogue = observer(({ type }) => {
     const navigate = useNavigate()
@@ -22,6 +23,10 @@ export const Catalogue = observer(({ type }) => {
     const [itemsLoading, setItemsLoading] = useState(false)
     const [pages, setPages] = useState(0)
 
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const [sendNumber, setSendNumber] = useState('')
+    const [sendName, setSendName] = useState('')
+    const [item, setItem] = useState(null)
 
     const fetchData = async () => {
         setLoading(true)
@@ -39,8 +44,10 @@ export const Catalogue = observer(({ type }) => {
             catalogue.setRigidities(rigiditiesData)
 
             await fetchItems(catalogue.brands, catalogue.grips, catalogue.bends, catalogue.rigidities, type, catalogue.min, catalogue.max, catalogue.limit, catalogue.page).then((data) => {
-                catalogue.setItems(data)
-                setPages(Math.ceil(data.count / catalogue.limit))
+                if (data) {
+                    catalogue.setItems(data)
+                    setPages(Math.ceil(data.count / catalogue.limit))
+                }
                 setLoading(false)
             })
         })
@@ -59,7 +66,9 @@ export const Catalogue = observer(({ type }) => {
             catalogue.limit,
             catalogue.page
         ).then((data) => {
-            catalogue.setItems(data)
+            if (data) {
+                catalogue.setItems(data)
+            }
             setItemsLoading(false)
         })
     }
@@ -432,6 +441,132 @@ export const Catalogue = observer(({ type }) => {
         // eslint-disable-next-line
     }, [type])
 
+    const handleBackspace = (e) => {
+        if (e.keyCode === 8 || e.key === 'Backspace') {
+            e.preventDefault()
+            const cleaned = ('' + e.target.value).replace(/\D/g, '')
+            const match = cleaned.split('')
+            let formattedNumber
+            switch (cleaned.length) {
+                case 10:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}${match[7]}-${match[8]}`
+                    break
+                case 9:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}${match[7]}-`
+                    break
+                case 8:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-${match[6]}`
+                    break
+                case 7:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}${match[5]}-`
+                    break
+                case 6:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}${match[4]}`
+                    break
+                case 5:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) ${match[3]}`
+                    break
+                case 4:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}${match[2]}) `
+                    break
+                case 3:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}${match[1]}`
+                    break
+                case 2:
+                    formattedNumber = !match ? '' :
+                        `(${match[0]}`
+                    break
+                case 1:
+                    formattedNumber = !match ? '' : ``
+                    break
+                case 0:
+                    formattedNumber = !match ? '' : ``
+                    break
+
+                default:
+                    break
+            }
+            const newCleaned = ('7' + formattedNumber).replace(/\D/g, '')
+            setPhoneNumber(formattedNumber)
+            setSendNumber(newCleaned)
+        }
+    }
+
+    const handlePhoneChange = (e) => {
+        const formattedNumber = formatPhoneNumber(e)
+        const cleaned = ('' + e.target.value).replace(/\D/g, '')
+        setPhoneNumber(formattedNumber)
+        setSendNumber('7' + cleaned)
+        console.log(cleaned)
+    }
+
+    const formatPhoneNumber = (e) => {
+        const cleaned = ('' + e.target.value).replace(/\D/g, '')
+        setSendNumber('7' + cleaned)
+        const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/)
+        let formattedNumber
+        switch (cleaned.length) {
+            case 10:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`
+                break
+            case 9:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-${match[4]}`
+                break
+            case 8:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}-`
+                break
+            case 7:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-${match[3]}`
+                break
+            case 6:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}-`
+                break
+            case 5:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}`
+                break
+            case 4:
+                formattedNumber = !match ? '' : `(${match[1]}) ${match[2]}`
+                break
+            case 3:
+                formattedNumber = !match ? '' : `(${match[1]}) `
+                break
+            case 2:
+                formattedNumber = !match ? '' : `(${match[1]}`
+                break
+            case 1:
+                formattedNumber = !match ? '' : `(${match[1]}`
+                break
+            case 0:
+                formattedNumber = !match ? '' : ``
+                break
+
+            default:
+                break
+        }
+
+        return formattedNumber;
+    }
+
+    const closeModal = (e) => {
+        if (!e.target.classList.contains('form')) {
+            setItem(null)
+        }
+    }
+
+    const createDeal = () => {
+        dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, 1, item.type)
+        orderItems(item.id, 1)
+        setItem(null)
+    }
+
     return (
         <div className="Catalogue">
             {!loading ?
@@ -475,8 +610,8 @@ export const Catalogue = observer(({ type }) => {
                                 <>
                                     {catalogue.items.length > 0 ?
                                         <div className="ItemsBoxShow">
-                                            {/* {[...new Set(catalogue.items.map(item => item.code))].map(uniqueCode => {
-                                                const uniqueItem = catalogue.items.find(item => item.code === uniqueCode);
+                                            {[...new Set(catalogue.items.map(item => item.code))].map(uniqueCode => {
+                                                const uniqueItem = catalogue.items.find(item => item.code === uniqueCode)
 
                                                 return (
                                                     <div key={uniqueItem.id} className="ItemCard ItemCardMain">
@@ -501,47 +636,8 @@ export const Catalogue = observer(({ type }) => {
                                                             <div className="ItemPrice">{uniqueItem.price} Р</div>
                                                         </div>
                                                     </div>
-                                                );
-                                            })} */}
-                                            {catalogue.items.map(uniqueItem => {
-                                                return (
-                                                    <div key={uniqueItem.id} className="ItemCard ItemCardMain">
-                                                        {uniqueItem.img ?
-                                                            <div className="ItemImg">
-                                                                <img src={`${process.env.REACT_APP_API_URL + uniqueItem.img}`} alt="Фото клюшки" onClick={() => handleNavigate(uniqueItem)} />
-                                                                <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                    <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                </div>
-                                                            </div>
-                                                            :
-                                                            <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
-                                                                <div><MdPhotoCamera size={100} /></div>
-                                                                <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                    <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                        <div className="ItemInfo">
-                                                            <div className="ItemBrand">{uniqueItem.brand}</div>
-                                                            <div className="ItemName">{uniqueItem.name}</div>
-                                                            <div className="ItemPrice">{uniqueItem.price} Р</div>
-                                                        </div>
-                                                    </div>
-                                                );
+                                                )
                                             })}
-                                            {/* {pages > 2 &&
-                                                <div className="E-pagination">
-                                                    <button id="left" className="E-pag E-left E-margin-0 E-inactive" onClick={handlePagination}>➔</button>
-                                                    <button id="first" className="E-pag E-this" onClick={handlePagination}>1</button>
-                                                    <div className="Hide-1-2 Removed">. . .</div>
-                                                    <button id="mid1" className="E-pag E-mid-1" onClick={handlePagination}>2</button>
-                                                    <button id="mid2" className="E-pag" onClick={handlePagination}>3</button>
-                                                    <button id="mid3" className="E-pag E-mid-3" onClick={handlePagination}>4</button>
-                                                    <div className="Hide-29-30">. . .</div>
-                                                    <button id="last" className="E-pag E-last" onClick={handlePagination}>{pages}</button>
-                                                    <button id="right" className="E-pag" onClick={handlePagination}>➔</button>
-                                                </div>
-                                            } */}
                                         </div>
                                         :
                                         <div className="NothingFound">Ничего не найдено</div>
@@ -604,19 +700,23 @@ export const Catalogue = observer(({ type }) => {
                                                         </tr>
                                                         {catalogue.items.map((item) => {
                                                             return (
-                                                                <tr key={item.id}>
-                                                                    <td>{item.brand}</td>
-                                                                    <td className="ItemName">
-                                                                        <span>{item.name}</span>
-                                                                        <span className="Code">Арт. {item.code}</span>
-                                                                    </td>
-                                                                    <td>{item.grip}</td>
-                                                                    <td>{item.bend}</td>
-                                                                    <td>{item.rigidity}</td>
-                                                                    <td>{item.renew}</td>
-                                                                    <td className="ItemPrice">{item.price} Р</td>
-                                                                    <td className="ItemBuy"><div>Купить</div></td>
-                                                                </tr>
+                                                                <>
+                                                                    {item.count > 0 &&
+                                                                        <tr key={item.id}>
+                                                                            <td>{item.brand}</td>
+                                                                            <td className="ItemName">
+                                                                                <span>{item.name}</span>
+                                                                                <span className="Code">Арт. {item.code}</span>
+                                                                            </td>
+                                                                            <td>{item.grip}</td>
+                                                                            <td>{item.bend}</td>
+                                                                            <td>{item.rigidity}</td>
+                                                                            <td>{item.renew}</td>
+                                                                            <td className="ItemPrice">{item.price} Р</td>
+                                                                            <td className="ItemBuy"><div onClick={() => setItem(item)}>Купить</div></td>
+                                                                        </tr>
+                                                                    }
+                                                                </>
                                                             )
                                                         })}
                                                     </tbody>
@@ -638,6 +738,41 @@ export const Catalogue = observer(({ type }) => {
                 :
                 <div className="LoaderContainer">
                     <div className="Loader"></div>
+                </div>
+            }
+            {item &&
+                <div className="BuyModal" onClick={closeModal}>
+                    <div className="BuyForm form">
+                        <div className="BuySub form">Оформление заказа</div>
+                        <div className="BuyClue form">Имя</div>
+                        <input className="InputName form" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
+                        <div className="BuyClue form">Номер телефона</div>
+                        <div className="InputContainer form">
+                            <span className="PreNum form">+7&nbsp;</span>
+                            <input
+                                className="InputNumber form"
+                                type="text"
+                                maxLength="15"
+                                value={phoneNumber}
+                                onChange={(e) => {
+                                    handlePhoneChange(e)
+                                }}
+                                onKeyDown={handleBackspace}
+                                placeholder="(999) 999-99-99"
+                            />
+                        </div>
+                        <div className="BuyClue form">Информация о заказе</div>
+                        <div className="BuyInfo form"><span className="form">Артикул: </span>{item.code}</div>
+                        <div className="BuyInfo form"><span className="form">Фирма: </span>{item.brand}</div>
+                        <div className="BuyInfo form"><span className="form">Название: </span>{item.name}</div>
+                        <div className="BuyInfo form"><span className="form">Хват: </span>{item.grip}</div>
+                        <div className="BuyInfo form"><span className="form">Загиб: </span>{item.bend}</div>
+                        <div className="BuyInfo form"><span className="form">Жесткость: </span>{item.rigidity}</div>
+                        <div className="BuyInfo form"><span className="form">Ремонт: </span>{item.renew}</div>
+                        <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
+                        <div className="BuyInfo BuyCost form">Стоимость: {item.price} Р</div>
+                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАКАЗ</div>
+                    </div>
                 </div>
             }
         </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { findImages, findItem, findSameItems, getCount } from "../http/itemApi";
+import { findImages, findItem, findSameItems, getCount, orderItems } from "../http/itemApi";
 
 import '../styles/item.scss'
 
@@ -318,7 +318,9 @@ const Item = () => {
     }
 
     const createDeal = () => {
-        dealAdd()
+        dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, count, item.type)
+        orderItems(item.id, count)
+        document.querySelector('.BuyModal').classList.add('ModalNone')
     }
 
     return (

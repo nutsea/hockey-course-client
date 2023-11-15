@@ -414,6 +414,121 @@
     display: none !important;
 }
 
+.BuyModal {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .BuyForm {
+        width: 500px;
+        // height: 400px;
+        padding: 20px;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .BuySub {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .BuyClue {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        .InputName {
+            width: calc(100% - 32px);
+            margin: 5px 0 0 0;
+            padding: 10px 15px;
+            border: solid 1px #2c2c2c;
+            outline: none;
+            font-family: Montserrat;
+            font-size: 16px;
+        }
+
+        .InputContainer {
+            width: calc(100% - 32px);
+            margin-top: 5px;
+            padding: 0 15px;
+            border: solid 1px #2c2c2c;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+
+            .PreNum {
+                display: flex;
+                align-items: center;
+            }
+
+            .InputNumber {
+                width: calc(100% - 20px);
+                height: calc(100% - 20px);
+                padding: 10px 0;
+                border: none;
+                outline: none;
+                font-family: Montserrat;
+                font-size: 16px;
+                font-weight: 400;
+                padding: 10px 0;
+                color: #2c2c2c;
+            }
+        }
+
+        .BuyInfo {
+            margin-top: 5px;
+            width: 100%;
+            // font-weight: 500;
+
+            span {
+                font-size: 14px;
+                opacity: 0.7;
+                // font-weight: 600;
+            }
+        }
+
+        .BuyCost {
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .BuyConfirmBtn {
+            margin-top: 20px;
+            width: calc(100% - 40px);
+            padding: 11px 20px;
+            background-color: #8c8c8c;
+            color: white;
+            text-align: center;
+            font-weight: 500;
+            transition: opacity 0.1s linear, transform 0.1s linear, background-color 0.1s linear;
+        }
+
+        .BuyConfirmActive {
+            background-color: #182443 !important;
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.9;
+            }
+
+            &:active {
+                transform: scale(0.99);
+            }
+        }
+    }
+}
+
 @media (max-width: 1120px) {
     .TableWrap2 {
         overflow-x: scroll !important;

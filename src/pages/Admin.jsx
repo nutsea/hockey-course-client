@@ -993,6 +993,7 @@ const Admin = () => {
                                                                                         <th>Жесткость</th>
                                                                                         <th>Цена</th>
                                                                                         <th>Ремонт</th>
+                                                                                        <th>Кол-во</th>
                                                                                     </tr>
                                                                                     {restored.map((item, i) => {
                                                                                         return (
@@ -1008,6 +1009,7 @@ const Admin = () => {
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.rigidity}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.price}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.renew}</td>
+                                                                                                <td onClick={() => changeItemClick(item)}>{item.count}</td>
                                                                                             </tr>
                                                                                         )
                                                                                     })}
