@@ -20,7 +20,7 @@ export default class ItemStore {
         this._max = 100000
         this._maxSet = 100000
         this._page = 1
-        this._limit = 3
+        this._limit = 18
         this._amount = 0
         makeAutoObservable(this)
     }
