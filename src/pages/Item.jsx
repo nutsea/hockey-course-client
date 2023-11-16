@@ -254,7 +254,6 @@ const Item = () => {
         const cleaned = ('' + e.target.value).replace(/\D/g, '')
         setPhoneNumber(formattedNumber)
         setSendNumber('7' + cleaned)
-        console.log(cleaned)
     }
 
     const formatPhoneNumber = (e) => {

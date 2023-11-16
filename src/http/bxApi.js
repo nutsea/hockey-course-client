@@ -66,3 +66,47 @@ export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rig
         }
     })
 }
+
+export const callAdd = (sendName, sendNumber) => {
+    const contactData = {
+        fields: {
+            NAME: `${sendName}`,
+            PHONE: [{ VALUE: `+${sendNumber}`, VALUE_TYPE: 'WORK' }]
+        }
+    }
+
+    $.ajax({
+        url: process.env.REACT_APP_BX_URL + 'crm.contact.add',
+        type: 'POST',
+        data: JSON.stringify(contactData),
+        contentType: 'application/json',
+        success: function (contactResult) {
+            console.log('Клиент успешно создан:', contactResult)
+
+            const dealData = {
+                fields: {
+                    TITLE: 'ЗАЯВКА НА ЗВОНОК',
+                    STAGE_ID: 'NEW',
+                    CONTACT_ID: contactResult.result,
+                    OPENED: 'Y'
+                }
+            }
+
+            $.ajax({
+                url: process.env.REACT_APP_BX_URL + 'crm.deal.add',
+                type: 'POST',
+                data: JSON.stringify(dealData),
+                contentType: 'application/json',
+                success: function (dealResult) {
+                    console.log('Сделка успешно создана:', dealResult)
+                },
+                error: function (dealError) {
+                    console.error('Ошибка при создании сделки:', dealError)
+                }
+            })
+        },
+        error: function (contactError) {
+            console.error('Ошибка при создании клиента:', contactError)
+        }
+    })
+}
