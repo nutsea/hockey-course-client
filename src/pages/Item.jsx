@@ -7,9 +7,8 @@ import '../styles/item.scss'
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { IoIosArrowUp } from 'react-icons/io'
 
-import sizes1 from '../assets/images/Sizes1.jpeg'
+import sizes1 from '../assets/images/Sizes1.jpg'
 import sizes2 from '../assets/images/Sizes2.png'
-import sizes3 from '../assets/images/Sizes3.jpeg'
 import { dealAdd } from "../http/bxApi";
 
 const Item = () => {
@@ -318,9 +317,11 @@ const Item = () => {
     }
 
     const createDeal = () => {
-        dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, count, item.type)
-        orderItems(item.id, count)
-        document.querySelector('.BuyModal').classList.add('ModalNone')
+        if (sendName.length > 0 && sendNumber.length === 11) {
+            dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, count, null, null, item.type)
+            orderItems(item.id, count)
+            document.querySelector('.BuyModal').classList.add('ModalNone')
+        }
     }
 
     return (
@@ -447,12 +448,42 @@ const Item = () => {
                                                 <div className="SizesImg">
                                                     <img src={sizes2} alt="Таблица размеров" />
                                                 </div>
-                                                <div className="SizesImg">
-                                                    <img src={sizes3} alt="Таблица размеров" />
-                                                </div>
                                             </>
                                             :
-                                            <></>
+                                            <>
+                                                <div className="Ship">
+                                                    <div className="ShipSub">ДОСТАВКА:</div>
+                                                    <div className="ShipList">
+                                                        <div className="ListItem">
+                                                            • Доставка осуществляется курьерской службой СДЭК, в случаи отсутствия ПВЗ СДЭК в вашем населённом пункте, можем рассмотреть другие транспортные компании, такие как ПЭК и Деловые линии.
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            • Отправка осуществляется в течении 24 часов после оплаты заказы.
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            • После отправки мы направляем Вам номер транспортной накладной, для отслеживания заказа.
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            • Стоимость доставки оплачивается Вами при получении заказа.
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            • Узнать стоимость и срок доставки до Вашего населенного пункту, Вы сможете у менеджера при оформлении заказ.
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            • Средняя стоимость и срок доставки по России на 1-2 клюшки составляет 400 руб. и срок 3-4 дня (при отправки курьерской службой СДЭК).
+                                                        </div>
+                                                    </div>
+                                                    <div className="ShipSub SecondShipSub">САМОВЫВОЗ:</div>
+                                                    <div className="ShipList">
+                                                        <div className="ListItem">
+                                                            Магазин "Хоккейные клюшки ТОП"
+                                                        </div>
+                                                        <div className="ListItem">
+                                                            Адрес: г. Казань, пер. Односторонки Гривки 10, цокольный этаж.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
                                     }
                                 </div>
                             </div>

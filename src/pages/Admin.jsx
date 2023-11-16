@@ -29,6 +29,7 @@ const Admin = () => {
         rigidity: '',
         count: '',
         renew: '',
+        height: '',
         file: null,
         files: null
     })
@@ -189,7 +190,7 @@ const Admin = () => {
 
         let images = []
 
-        if (name === 'price' || name === 'bend' || name === 'rigidity' || name === 'count') {
+        if (name === 'price' || name === 'bend' || name === 'rigidity' || name === 'count' || name === 'height') {
             newValue = ('' + newValue).replace(/\D/g, '')
         }
 
@@ -219,6 +220,7 @@ const Admin = () => {
             rigidity: '',
             count: '',
             renew: '',
+            height: '',
             file: null,
             files: null
         })
@@ -268,8 +270,8 @@ const Admin = () => {
     }
 
     const createOldItem = () => {
-        if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.renew) {
-            addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.renew)
+        if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.renew && data.height) {
+            addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.renew, data.height)
                 .then(() => {
                     if (chosen === 'original') {
                         setOriginals(null)
@@ -318,33 +320,56 @@ const Admin = () => {
     }
 
     const changeConfirm = () => {
-        updateItemAndImages(changeItem.id, changeItem.code, changeItem.brand, changeItem.name, changeItem.description, changeItem.price, changeItem.grip, changeItem.bend, changeItem.rigidity, changeItem.count, changeItem.renew, newImages.file, newImages.files, deleteImages)
-            .then(() => {
-                if (chosen === 'original') {
-                    setOriginals(null)
-                    fetchOriginals().then(data => {
-                        setOriginals(data)
+        if (chosen === 'restored' && !changeItem.height) {
+            document.querySelector('.restWarning').classList.add('Error')
+            return
+        }
+        if (changeItem.code && changeItem.brand && changeItem.name && changeItem.price && changeItem.grip && changeItem.bend && changeItem.rigidity && changeItem.count) {
+            updateItemAndImages(changeItem.id, changeItem.code, changeItem.brand, changeItem.name, changeItem.description, changeItem.price, changeItem.grip, changeItem.bend, changeItem.rigidity, changeItem.count, changeItem.renew, changeItem.height ? changeItem.height : 1, newImages.file, newImages.files, deleteImages)
+                .then(() => {
+                    if (chosen === 'original') {
+                        setOriginals(null)
+                        fetchOriginals().then(data => {
+                            setOriginals(data)
+                        })
+                    }
+                    if (chosen === 'replica') {
+                        setReplicas(null)
+                        fetchReplicas().then(data => {
+                            setReplicas(data)
+                        })
+                    }
+                    if (chosen === 'restored') {
+                        setRestored(null)
+                        fetchRestored().then(data => {
+                            setRestored(data)
+                        })
+                    }
+                    setChangeItem(null)
+                    setDeleteImages([])
+                    setNewImages({
+                        file: null,
+                        files: null
                     })
-                }
-                if (chosen === 'replica') {
-                    setReplicas(null)
-                    fetchReplicas().then(data => {
-                        setReplicas(data)
-                    })
-                }
-                if (chosen === 'restored') {
-                    setRestored(null)
-                    fetchRestored().then(data => {
-                        setRestored(data)
-                    })
-                }
-                setChangeItem(null)
-                setDeleteImages([])
-                setNewImages({
-                    file: null,
-                    files: null
                 })
-            })
+        } else {
+            switch (chosen) {
+                case 'original':
+                    document.querySelector('.origWarning').classList.add('Error')
+                    break
+
+                case 'replica':
+                    document.querySelector('.repWarning').classList.add('Error')
+                    break
+
+                case 'restored':
+                    document.querySelector('.restWarning').classList.add('Error')
+                    break
+
+                default:
+                    break
+            }
+        }
     }
 
     const handleChangeItem = (e) => {
@@ -354,7 +379,7 @@ const Admin = () => {
 
         let images = []
 
-        if (name === 'price' || name === 'bend' || name === 'rigidity' || name === 'count') {
+        if (name === 'price' || name === 'bend' || name === 'rigidity' || name === 'count' || name === 'height') {
             newValue = ('' + newValue).replace(/\D/g, '')
         }
 
@@ -583,6 +608,7 @@ const Admin = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="files FileClear origfilesClear" id="origfiles" name="files" onClick={clearFiles}>Очистить поле</div>
+                                                            <div className="CreateWarning origWarning">Заполните все поля!</div>
                                                             <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
                                                             <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
                                                         </div>
@@ -853,6 +879,7 @@ const Admin = () => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="files FileClear repfilesClear" id="repfiles" name="files" onClick={clearFiles}>Очистить поле</div>
+                                                                <div className="CreateWarning repWarning">Заполните все поля!</div>
                                                                 <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
                                                                 <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
                                                             </div>
@@ -991,6 +1018,7 @@ const Admin = () => {
                                                                                         <th>Хват</th>
                                                                                         <th>Загиб</th>
                                                                                         <th>Жесткость</th>
+                                                                                        <th>Высота</th>
                                                                                         <th>Цена</th>
                                                                                         <th>Ремонт</th>
                                                                                         <th>Кол-во</th>
@@ -1007,6 +1035,7 @@ const Admin = () => {
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.grip}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.bend}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.rigidity}</td>
+                                                                                                <td onClick={() => changeItemClick(item)}>{item.height}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.price}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.renew}</td>
                                                                                                 <td onClick={() => changeItemClick(item)}>{item.count}</td>
@@ -1040,8 +1069,11 @@ const Admin = () => {
                                                                 <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={changeItem.bend} onChange={handleChangeItem} />
                                                                 <div className="InputClue">Жесткость</div>
                                                                 <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={changeItem.rigidity} onChange={handleChangeItem} />
+                                                                <div className="InputClue">Высота</div>
+                                                                <input type="text" placeholder="Высота" name="height" maxLength={9} value={changeItem.height} onChange={handleChangeItem} />
                                                                 <div className="InputClue">Ремонт</div>
                                                                 <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={changeItem.renew} onChange={handleChangeItem} />
+                                                                <div className="CreateWarning restWarning">Заполните все поля!</div>
                                                                 <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
                                                                 <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
                                                             </div>
@@ -1073,6 +1105,8 @@ const Admin = () => {
                                                     <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={data.bend} onChange={handleChange} />
                                                     <div className="InputClue">Жесткость</div>
                                                     <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={data.rigidity} onChange={handleChange} />
+                                                    <div className="InputClue">Высота</div>
+                                                    <input type="text" placeholder="Высота" name="height" maxLength={9} value={data.height} onChange={handleChange} />
                                                     <div className="InputClue">Ремонт</div>
                                                     <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={data.renew} onChange={handleChange} />
                                                     <div className="CreateWarning restWarning">Заполните все поля!</div>

@@ -1,6 +1,6 @@
 import $ from 'jquery'
 
-export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rigidity, price, count, type) => {
+export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rigidity, price, count, renew, height, type) => {
     const contactData = {
         fields: {
             NAME: `${sendName}`,
@@ -44,7 +44,7 @@ export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rig
                     ASSIGNED_BY_ID: 1,
                     CURRENCY_ID: 'RUB',
                     OPPORTUNITY: price * count,
-                    COMMENTS: `Артикул: ${code}\nФирма: ${brand}\nНазвание: ${name}\nХват: ${grip}\nЗагиб: ${bend}\nЖесткость: ${rigidity}\nТип: ${newType}\nЦена: ${price}₽\nКоличество: ${count}`
+                    COMMENTS: `Артикул: ${code}\nФирма: ${brand}\nНазвание: ${name}\nХват: ${grip}\nЗагиб: ${bend}\nЖесткость: ${rigidity}\n${height ? `Высота: ${height}\n` : ''}${renew ? `Ремонт: ${renew}\n` : ''}Тип: ${newType}\nЦена: ${price}₽\nКоличество: ${count}`
                 }
             }
 

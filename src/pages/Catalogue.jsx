@@ -562,9 +562,11 @@ export const Catalogue = observer(({ type }) => {
     }
 
     const createDeal = () => {
-        dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, 1, item.type)
-        orderItems(item.id, 1)
-        setItem(null)
+        if (sendName.length > 0 && sendNumber.length === 11) {
+            dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, 1, item.renew, item.height, item.type)
+            orderItems(item.id, 1)
+            setItem(null)
+        }
     }
 
     return (
@@ -694,6 +696,7 @@ export const Catalogue = observer(({ type }) => {
                                                             <th>Хват</th>
                                                             <th>Загиб</th>
                                                             <th>Жесткость</th>
+                                                            <th>Высота</th>
                                                             <th>Ремонт</th>
                                                             <th>Цена</th>
                                                             <th>Купить</th>
@@ -711,6 +714,7 @@ export const Catalogue = observer(({ type }) => {
                                                                             <td>{item.grip}</td>
                                                                             <td>{item.bend}</td>
                                                                             <td>{item.rigidity}</td>
+                                                                            <td>{item.height}</td>
                                                                             <td>{item.renew}</td>
                                                                             <td className="ItemPrice">{item.price} Р</td>
                                                                             <td className="ItemBuy"><div onClick={() => setItem(item)}>Купить</div></td>
@@ -768,6 +772,7 @@ export const Catalogue = observer(({ type }) => {
                         <div className="BuyInfo form"><span className="form">Хват: </span>{item.grip}</div>
                         <div className="BuyInfo form"><span className="form">Загиб: </span>{item.bend}</div>
                         <div className="BuyInfo form"><span className="form">Жесткость: </span>{item.rigidity}</div>
+                        <div className="BuyInfo form"><span className="form">Высота: </span>{item.height}</div>
                         <div className="BuyInfo form"><span className="form">Ремонт: </span>{item.renew}</div>
                         <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
                         <div className="BuyInfo BuyCost form">Стоимость: {item.price} Р</div>
