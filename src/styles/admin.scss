@@ -77,16 +77,10 @@
                     background-color: rgba(255, 255, 255, 0.2);
                 }
             }
-
-            // .Chosen {
-            //     background-color: white !important;
-            //     color: #2c2c2c;
-            // }
         }
 
         .Workspace {
             padding: 20px;
-            // height: fit-content;
 
             .CreateBtn {
                 background-color: white;
@@ -314,8 +308,6 @@
 
                 input,
                 textarea {
-                    // margin-top: 10px;
-                    // margin-bottom: 10px;
                     padding: 10px 20px;
                     width: calc(100% - 40px);
                     outline: none;
@@ -326,7 +318,6 @@
 
                 textarea {
                     margin-left: 0 !important;
-                    // margin-top: 10px !important;
                     resize: vertical;
                     max-height: 200px;
                 }
@@ -334,9 +325,7 @@
                 .FileInput {
                     width: calc(100% - 2px);
                     height: 100px;
-                    // margin-top: 10px;
                     border: dashed 1px white;
-                    // border-radius: 10px;
                     position: relative;
                     transition: background-color 0.1s linear;
 
@@ -566,6 +555,5 @@
     .Chosen {
         background-color: rgba(255, 255, 255, 0.1) !important;
         color: white !important;
-        // text-decoration: underline !important;
     }
 }

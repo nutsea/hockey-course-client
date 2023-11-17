@@ -194,52 +194,57 @@ function App() {
             </section>
             <footer className="Footer">
                 <div className="FooterTop">
-                    <div className="FLogo"><img src={logo2} alt="Логотип" /></div>
-                    <div className="FForm">
-                        <div className="FFSub">Если у вас есть вопросы</div>
-                        <input className="InputName" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
-                        <div className="InputContainer form">
-                            <span className="PreNum form">+7&nbsp;</span>
-                            <input
-                                className="InputNumber form"
-                                type="text"
-                                maxLength="15"
-                                value={phoneNumber}
-                                onChange={(e) => {
-                                    handlePhoneChange(e)
-                                }}
-                                onKeyDown={handleBackspace}
-                                placeholder="(999) 999-99-99"
-                            />
+                    <div className="FWrap1">
+                        <div className="FLogo"><img src={logo2} alt="Логотип" /></div>
+                        <div className="FForm">
+                            <div className="FFSub">Если у вас есть вопросы</div>
+                            <input className="InputName" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
+                            <div className="InputContainer form">
+                                <span className="PreNum form">+7&nbsp;</span>
+                                <input
+                                    className="InputNumber form"
+                                    type="text"
+                                    maxLength="15"
+                                    value={phoneNumber}
+                                    onChange={(e) => {
+                                        handlePhoneChange(e)
+                                    }}
+                                    onKeyDown={handleBackspace}
+                                    placeholder="(999) 999-99-99"
+                                />
+                            </div>
+                            <div className={`FSubmit ${sendNumber.length === 11 && sendName.length > 0 ? 'SubmitRed' : ''}`} onClick={sendCall}>Отправить</div>
                         </div>
-                        <div className={`FSubmit ${sendNumber.length === 11 && sendName.length > 0 ? 'SubmitRed' : ''}`} onClick={sendCall}>Отправить</div>
                     </div>
-                    <div className="FLine"></div>
-                    <div className="FRevs">
-                        <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
-                            <img src={yandex} alt="" />
-                            <div>Отзывы на Яндекс.Картах</div>
-                        </a>
-                        <a className="FRev" href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">
-                            <img src={gis} alt="" />
-                            <div>Отзывы на 2ГИС</div>
-                        </a>
-                    </div>
-                    <div className="FLine"></div>
-                    <div className="FLinks">
-                        <div className="FLSub">Связаться с нами:</div>
-                        <div className="FLNum">
-                            <a href="tel:+79874199676">+7 (987) 419-96-76</a>
-                            <span> (Whats App)</span>
+                    <div className="FWrap2">
+                        <div className="FLine"></div>
+                        <div className="FRevs">
+                            <iframe className="FMap" title="map" src="https://yandex.ru/map-widget/v1/?um=constructor%3Af22f2244872dd2cbea656f73fcc6872d6ac6cc1914985c122a26e69c6be8c85b&amp;source=constructor" width="300" height="225" frameborder="0"></iframe>
+                            <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
+                                <img src={yandex} alt="" />
+                                <div>Отзывы на Яндекс.Картах</div>
+                            </a>
+                            <a className="FRev" href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">
+                                <img src={gis} alt="" />
+                                <div>Отзывы на 2ГИС</div>
+                            </a>
                         </div>
-                        <div className="FLNum">
-                            <a href="tel:+79874174714 ">+7 (987) 417-47-14</a>
-                            <span> (Whats App, Telegram)</span>
-                        </div>
-                        <div className="FLMedia">
-                            <a href="https://vk.com/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={vk} alt="Вконтакте" /></a>
-                            <a href="https://t.me/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
-                            <a href="https://instagram.com/hockey_sticks_top?igshid=MTNiYzNiMzkwZA==" target="_blank" rel="noreferrer"><img src={inst} alt="Инстаграм" /></a>
+                        <div className="FLine"></div>
+                        <div className="FLinks">
+                            <div className="FLSub">Связаться с нами:</div>
+                            <div className="FLNum">
+                                <a href="tel:+79874199676">+7 (987) 419-96-76</a>
+                                <span> (Whats App)</span>
+                            </div>
+                            <div className="FLNum">
+                                <a href="tel:+79874174714 ">+7 (987) 417-47-14</a>
+                                <span> (Whats App, Telegram)</span>
+                            </div>
+                            <div className="FLMedia">
+                                <a href="https://vk.com/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={vk} alt="Вконтакте" /></a>
+                                <a href="https://t.me/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
+                                <a href="https://instagram.com/hockey_sticks_top?igshid=MTNiYzNiMzkwZA==" target="_blank" rel="noreferrer"><img src={inst} alt="Инстаграм" /></a>
+                            </div>
                         </div>
                     </div>
                 </div>

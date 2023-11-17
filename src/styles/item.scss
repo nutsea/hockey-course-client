@@ -146,25 +146,20 @@
                 }
 
                 .gray {
-                    // color: #2c2c2c;
-                    // opacity: 0.7;
                     background-color: #585858;
                     color: white;
                 }
 
                 .blue {
-                    // color: rgb(0, 145, 255);
                     background-color: rgb(0, 145, 255);
                     color: white;
                 }
 
                 .yellow {
-                    // color: rgb(190, 190, 0);
                     background-color: rgb(234, 234, 14);
                 }
 
                 .green {
-                    // color: green;
                     background-color: green;
                     color: white;
                 }
@@ -276,7 +271,6 @@
     .ItemInfo {
         width: 100%;
         min-height: calc(100vh - 30px);
-        // border-top: solid 3px #2c2c2c;
         border-top: solid 3px #182443;
 
         .InfoHeader {
@@ -290,16 +284,9 @@
                 cursor: pointer;
 
                 &:hover {
-                    // background-color: #2c2c2c43;
                     background-color: #1824432e;
                 }
             }
-
-            // .InfoSelect {
-            //     // background-color: #2c2c2c !important;
-            //     background-color: #182443 !important;
-            //     color: white;
-            // }
         }
 
         .InfoContent {
@@ -413,7 +400,6 @@
 
         .BuyForm {
             width: 500px;
-            // height: 400px;
             padding: 20px;
             background-color: white;
             display: flex;
@@ -474,12 +460,10 @@
             .BuyInfo {
                 margin-top: 5px;
                 width: 100%;
-                // font-weight: 500;
 
                 span {
                     font-size: 14px;
                     opacity: 0.7;
-                    // font-weight: 600;
                 }
             }
 
