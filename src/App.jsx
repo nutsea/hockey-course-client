@@ -19,7 +19,6 @@ function App() {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [sendNumber, setSendNumber] = useState('')
     const [sendName, setSendName] = useState('')
-    const [year, setYear] = useState('')
 
     const chooseType = (e) => {
         setType(e.target.id)
@@ -161,11 +160,6 @@ function App() {
         return formattedNumber;
     }
 
-    useEffect(() => {
-        const date = new Date()
-        setYear(date.getFullYear())
-    }, [])
-
     const sendCall = () => {
         if (sendName.length > 0 && sendNumber.length === 11) {
             callAdd(sendName, sendNumber)
@@ -220,8 +214,12 @@ function App() {
                     </div>
                     <div className="FLine"></div>
                     <div className="FRevs">
-                        <a href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">Отзывы на Яндекс.Картах</a>
-                        <a href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">Отзывы на 2ГИС</a>
+                        <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
+                            <div>Отзывы на Яндекс.Картах</div>
+                        </a>
+                        <a className="FRev" href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">
+                            <div>Отзывы на 2ГИС</div>
+                        </a>
                     </div>
                     <div className="FLine"></div>
                     <div className="FLinks">
@@ -241,7 +239,7 @@ function App() {
                         </div>
                     </div>
                 </div>
-                <div className="FooterBottom">© Все права защищены {year}, HOCKEY STICKS TOP</div>
+                <div className="FooterBottom">© Все права защищены 2016, HOCKEY STICKS TOP</div>
             </footer>
         </div>
     );
