@@ -7,6 +7,8 @@ import logo2 from './assets/images/Logo2.png'
 import vk from './assets/icons/vk.png'
 import tg from './assets/icons/tg.png'
 import inst from './assets/icons/inst.png'
+import gis from './assets/icons/gis.jpeg'
+import yandex from './assets/icons/yandex.png'
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { callAdd } from "./http/bxApi";
@@ -215,9 +217,11 @@ function App() {
                     <div className="FLine"></div>
                     <div className="FRevs">
                         <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
+                            <img src={yandex} alt="" />
                             <div>Отзывы на Яндекс.Картах</div>
                         </a>
                         <a className="FRev" href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">
+                            <img src={gis} alt="" />
                             <div>Отзывы на 2ГИС</div>
                         </a>
                     </div>
