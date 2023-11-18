@@ -73,6 +73,13 @@ export const Catalogue = observer(({ type }) => {
         })
     }
 
+    const imageLoad = (i) => {
+        const none = document.querySelector(`.NoneImg${i}`)
+        none && none.classList.add('None')
+        const isImg = document.querySelector(`.IsImg${i}`)
+        isImg && isImg.classList.remove('None')
+    }
+
     const setPrice = () => {
         document.querySelector('.PriceFilter').classList.toggle('Invisible')
         document.querySelector('.PriceArr').classList.toggle('Down')
@@ -611,18 +618,26 @@ export const Catalogue = observer(({ type }) => {
                                 <>
                                     {catalogue.items.length > 0 ?
                                         <div className="ItemsBoxShow">
-                                            {[...new Set(catalogue.items.map(item => item.code))].map(uniqueCode => {
+                                            {[...new Set(catalogue.items.map(item => item.code))].map((uniqueCode, i) => {
                                                 const uniqueItem = catalogue.items.find(item => item.code === uniqueCode)
 
                                                 return (
                                                     <div key={uniqueItem.id} className="ItemCard ItemCardMain">
                                                         {uniqueItem.img ?
-                                                            <div className="ItemImg">
-                                                                <img src={`${process.env.REACT_APP_API_URL + uniqueItem.img}`} alt="Фото клюшки" onClick={() => handleNavigate(uniqueItem)} />
-                                                                <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                    <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                            <>
+                                                                <div className={`ItemImg None IsImg${i}`}>
+                                                                    <img src={`${process.env.REACT_APP_API_URL + uniqueItem.img}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
+                                                                    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
+                                                                <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
+                                                                    <div className="LoaderMid"></div>
+                                                                    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                    </div>
+                                                                </div>
+                                                            </>
                                                             :
                                                             <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
                                                                 <div><MdPhotoCamera size={50} /></div>

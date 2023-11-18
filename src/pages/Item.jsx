@@ -324,6 +324,13 @@ const Item = () => {
         }
     }
 
+    const imageLoad = (i) => {
+        const none = document.querySelector(`.NoneImg${i}`)
+        none && none.classList.add('None')
+        const isImg = document.querySelector(`.IsImg${i}`)
+        isImg && isImg.classList.remove('None')
+    }
+
     return (
         <div className="ItemContainer">
             {!loading ?
@@ -342,7 +349,10 @@ const Item = () => {
                                                     return (
                                                         <>
                                                             <div key={i} className={`SliderImage Img${i} ${i === 0 ? 'Visible' : ''}`}>
-                                                                <img src={`${process.env.REACT_APP_API_URL + image.img}`} alt="Фото клюшки" />
+                                                                <img className={`IsImg${i} None`} src={`${process.env.REACT_APP_API_URL + image.img}`} onLoad={() => imageLoad(i)} alt="Фото клюшки" />
+                                                                <div className={`ItemImg NoneImg NoneImg${i}`}>
+                                                                    <div className="LoaderLight"></div>
+                                                                </div>
                                                             </div>
                                                         </>
                                                     )
@@ -355,7 +365,12 @@ const Item = () => {
                                             <>
                                                 <div className="SliderImage Visible">
                                                     {item.img ?
-                                                        <img src={`${process.env.REACT_APP_API_URL + item.img}`} alt="Фото клюшки" />
+                                                        <>
+                                                            <img className="IsImg1 None" src={`${process.env.REACT_APP_API_URL + item.img}`} onLoad={() => imageLoad(1)} alt="Фото клюшки" />
+                                                            <div className={`ItemImg NoneImg NoneImg1`}>
+                                                                <div className="LoaderLight"></div>
+                                                            </div>
+                                                        </>
                                                         :
                                                         <div className="ItemImg NoneImg">
                                                             <div><MdPhotoCamera size={50} /></div>
@@ -440,7 +455,10 @@ const Item = () => {
                                                 </div>
                                                 {item.img &&
                                                     <div className="IDImg">
-                                                        <img src={`${process.env.REACT_APP_API_URL + item.img}`} alt="Фото клюшки" />
+                                                        <img className="IsImgDesc None" src={`${process.env.REACT_APP_API_URL + item.img}`} onLoad={() => imageLoad('Desc')} alt="Фото клюшки" />
+                                                        <div className={'ItemImg NoneImg NoneImgDesc'}>
+                                                            <div className="LoaderLight"></div>
+                                                        </div>
                                                     </div>
                                                 }
                                             </div>

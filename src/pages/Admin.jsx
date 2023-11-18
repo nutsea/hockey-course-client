@@ -1205,7 +1205,7 @@ const Admin = () => {
                                                         <div className="FileTextLoad">Таблица товаров</div>
                                                     </div>
                                                     <div className="FileClue">Нажмите на поле или перетащите файл</div>
-                                                    <div className="FileClue">Формат - xlsx</div>
+                                                    <div className="FileClue">Формат - xlsx или xls</div>
                                                 </div>
                                                 <div className="FileInfo tablefileSet">
                                                     <div className="FileText">
