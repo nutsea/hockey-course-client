@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import * as XLSX from 'xlsx';
 
 import { IoMdTrash } from 'react-icons/io'
 import { BiImageAdd } from 'react-icons/bi'
+import { PiTable } from 'react-icons/pi'
 import { AiOutlineFileImage } from 'react-icons/ai'
 
 import '../styles/admin.scss'
-import { addOld, createNew, deleteItems, fetchOriginals, fetchReplicas, fetchRestored, findImages, updateItemAndImages } from "../http/itemApi";
+import { addOld, createMany, createNew, deleteItems, fetchOriginals, fetchReplicas, fetchRestored, findImages, updateItemAndImages } from "../http/itemApi";
 
 const Admin = () => {
     const [isChecked, setIsChecked] = useState(false)
@@ -40,6 +42,9 @@ const Admin = () => {
         file: null,
         files: null
     })
+    const [table, setTable] = useState(null)
+    const [uploading, setUploading] = useState(false)
+    const [uploaded, setUploaded] = useState(false)
 
     const check = (e) => {
         e.preventDefault()
@@ -78,6 +83,9 @@ const Admin = () => {
         setToDelete(null)
         setCanDelete(false)
         setChangeItem(null)
+        setTable(null)
+        setUploading(false)
+        setUploaded(false)
     }
 
     const checkboxClick = (e, id) => {
@@ -181,6 +189,7 @@ const Admin = () => {
             ...prevFormData,
             [e.target.classList[0]]: null,
         }))
+        setTable(null)
     }
 
     const handleChange = (e) => {
@@ -270,31 +279,55 @@ const Admin = () => {
     }
 
     const createOldItem = () => {
-        if (data.code && data.brand && data.name && data.description && data.price && data.grip && data.bend && data.rigidity && chosen && data.renew && data.height) {
-            addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.renew, data.height)
-                .then(() => {
-                    if (chosen === 'original') {
-                        setOriginals(null)
-                        fetchOriginals().then(data => {
-                            setOriginals(data)
-                        })
-                    }
-                    if (chosen === 'replica') {
-                        setReplicas(null)
-                        fetchReplicas().then(data => {
-                            setReplicas(data)
-                        })
-                    }
-                    if (chosen === 'restored') {
-                        setRestored(null)
-                        fetchRestored().then(data => {
-                            setRestored(data)
-                        })
-                    }
-                    cancelCreate()
-                })
-        } else {
-            document.querySelector('.restWarning').classList.add('Error')
+        try {
+            if (data.code && data.brand && data.name && data.price && data.grip && data.bend && data.rigidity && chosen && data.renew && data.height) {
+                addOld(data.code, data.brand, data.name, data.description, data.price, data.grip, data.bend, data.rigidity, chosen, data.renew, data.height)
+                    .then(() => {
+                        if (chosen === 'original') {
+                            setOriginals(null)
+                            fetchOriginals().then(data => {
+                                setOriginals(data)
+                            })
+                        }
+                        if (chosen === 'replica') {
+                            setReplicas(null)
+                            fetchReplicas().then(data => {
+                                setReplicas(data)
+                            })
+                        }
+                        if (chosen === 'restored') {
+                            setRestored(null)
+                            fetchRestored().then(data => {
+                                setRestored(data)
+                            })
+                        }
+                        cancelCreate()
+                    })
+            } else {
+                document.querySelector('.restWarning').classList.add('Error')
+            }
+        } catch (e) {
+            if (e.status === 409) {
+                switch (chosen) {
+                    case 'original':
+                        const err = document.querySelector('.origWarning')
+                        err && err.classList.add('Error')
+                        break
+
+                    case 'replica':
+                        const err2 = document.querySelector('.repWarning')
+                        err2 && err2.classList.add('Error')
+                        break
+
+                    case 'restored':
+                        const err3 = document.querySelector('.restWarning')
+                        err3 && err3.classList.add('Error')
+                        break
+
+                    default:
+                        break
+                }
+            }
         }
     }
 
@@ -413,6 +446,41 @@ const Admin = () => {
         })
     }
 
+    const tableUpload = (e) => {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+        reader.onload = () => {
+            const data = reader.result
+            const workbook = XLSX.read(data, {
+                type: 'binary'
+            })
+            workbook.SheetNames.forEach((sheetName) => {
+                const rowObject = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
+                setTable(rowObject)
+            })
+        }
+        reader.readAsBinaryString(file)
+    }
+
+    const tableSend = () => {
+        if (table) {
+            setUploading(true)
+            createMany(table).then(() => {
+                setUploading(false)
+                setUploaded(true)
+                setTable(null)
+                try {
+                    document.querySelector('.tablefileInput').value = null
+                    document.querySelector('.tablefileUnset').classList.add('Showed')
+                    document.querySelector('.tablefileSet').classList.remove('Showed')
+                    document.querySelector('.tablefileClear').classList.remove('Showed')
+                } catch (e) {
+
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         fetchOriginals().then(data => {
             setOriginals(data)
@@ -437,6 +505,7 @@ const Admin = () => {
                             <div className="PanelTab Chosen" id="original" onClick={chooseTab}>ОРИГИНАЛ</div>
                             <div className="PanelTab" id="replica" onClick={chooseTab}>РЕПЛИКА</div>
                             <div className="PanelTab" id="restored" onClick={chooseTab}>ВОССТАНОВЛЕННЫЕ / БУ</div>
+                            <div className="PanelTab" id="upload" onClick={chooseTab}>ТАБЛИЦА</div>
                         </div>
                         <div className="Workspace">
                             {chosen === 'original' ?
@@ -703,6 +772,7 @@ const Admin = () => {
                                             </div>
                                             <div className="files FileClear origfilesClear" id="origfiles" name="files" onClick={clearFiles}>Очистить поле</div>
                                             <div className="CreateWarning origWarning">Заполните все поля!</div>
+                                            <div className="CreateWarning origError">Такой товар уже существует!</div>
                                             <div className="CreateItemBtn" onClick={createNewItem}>Создать</div>
                                             <div className="CreateCancelItemBtn" onClick={cancelCreate}>Отменить</div>
                                         </div>
@@ -975,147 +1045,277 @@ const Admin = () => {
                                                     </div>
                                                     <div className="files FileClear repfilesClear" id="repfiles" name="files" onClick={clearFiles}>Очистить поле</div>
                                                     <div className="CreateWarning repWarning">Заполните все поля!</div>
+                                                    <div className="CreateWarning repError">Такой товар уже существует!</div>
                                                     <div className="CreateItemBtn" onClick={createNewItem}>Создать</div>
                                                     <div className="CreateCancelItemBtn" onClick={cancelCreate}>Отменить</div>
                                                 </div>
                                             </>
                                         }
                                     </>
-                                    :
-                                    <>
-                                        <div className="CreateBtn" onClick={() => setCreateRestored(true)}>Создать товар</div>
-                                        {!createRestored ?
-                                            <>
-                                                {restored ?
-                                                    <>
-                                                        {!changeItem ?
-                                                            <>
-                                                                {restored.length > 0 ?
-                                                                    <>
-                                                                        {!canDelete ?
-                                                                            <div className="DeleteContainer">
-                                                                                <div className="DeleteBtn" onClick={deleteMany}>Удалить выбранное</div>
-                                                                                <div className="ThrowCheck" onClick={checkboxThrow}>Сбросить выбор</div>
-                                                                            </div>
-                                                                            :
-                                                                            <div className="DeleteConfirm">
-                                                                                <div className="ConfirmText">Вы уверены, что хотите удалить выбранные товары?</div>
-                                                                                <div className="ConfirmBtns">
-                                                                                    <div className="DeleteBtn" onClick={deleteConfirm}>Удалить</div>
-                                                                                    <div className="DeleteCancel" onClick={cancelDelete}>Отменить</div>
+                                    : (chosen === 'restored') ?
+                                        <>
+                                            <div className="CreateBtn" onClick={() => setCreateRestored(true)}>Создать товар</div>
+                                            {!createRestored ?
+                                                <>
+                                                    {restored ?
+                                                        <>
+                                                            {!changeItem ?
+                                                                <>
+                                                                    {restored.length > 0 ?
+                                                                        <>
+                                                                            {!canDelete ?
+                                                                                <div className="DeleteContainer">
+                                                                                    <div className="DeleteBtn" onClick={deleteMany}>Удалить выбранное</div>
+                                                                                    <div className="ThrowCheck" onClick={checkboxThrow}>Сбросить выбор</div>
                                                                                 </div>
+                                                                                :
+                                                                                <div className="DeleteConfirm">
+                                                                                    <div className="ConfirmText">Вы уверены, что хотите удалить выбранные товары?</div>
+                                                                                    <div className="ConfirmBtns">
+                                                                                        <div className="DeleteBtn" onClick={deleteConfirm}>Удалить</div>
+                                                                                        <div className="DeleteCancel" onClick={cancelDelete}>Отменить</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            }
+                                                                            <div className="Clue">Для редактирования нажмите на нужный товар</div>
+                                                                            <div className="TableWrap">
+                                                                                <table>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <th></th>
+                                                                                            <th>Артикул</th>
+                                                                                            <th>Фирма</th>
+                                                                                            <th>Название</th>
+                                                                                            <th>Хват</th>
+                                                                                            <th>Загиб</th>
+                                                                                            <th>Жесткость</th>
+                                                                                            <th>Высота</th>
+                                                                                            <th>Цена</th>
+                                                                                            <th>Ремонт</th>
+                                                                                            <th>Кол-во</th>
+                                                                                        </tr>
+                                                                                        {restored.map((item, i) => {
+                                                                                            return (
+                                                                                                <tr key={item.id} className="ItemRow">
+                                                                                                    <td onClick={(e) => checkboxClick(e, item.id)}>
+                                                                                                        <input type="checkbox" className={`Checkbox Check${item.id}`} id={item.id} />
+                                                                                                    </td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.code}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.brand}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.name}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.grip}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.bend}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.rigidity}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.height}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.price}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.renew}</td>
+                                                                                                    <td onClick={() => changeItemClick(item)}>{item.count}</td>
+                                                                                                </tr>
+                                                                                            )
+                                                                                        })}
+                                                                                    </tbody>
+                                                                                </table>
                                                                             </div>
-                                                                        }
-                                                                        <div className="Clue">Для редактирования нажмите на нужный товар</div>
-                                                                        <div className="TableWrap">
-                                                                            <table>
-                                                                                <tbody>
-                                                                                    <tr>
-                                                                                        <th></th>
-                                                                                        <th>Артикул</th>
-                                                                                        <th>Фирма</th>
-                                                                                        <th>Название</th>
-                                                                                        <th>Хват</th>
-                                                                                        <th>Загиб</th>
-                                                                                        <th>Жесткость</th>
-                                                                                        <th>Высота</th>
-                                                                                        <th>Цена</th>
-                                                                                        <th>Ремонт</th>
-                                                                                        <th>Кол-во</th>
-                                                                                    </tr>
-                                                                                    {restored.map((item, i) => {
-                                                                                        return (
-                                                                                            <tr key={item.id} className="ItemRow">
-                                                                                                <td onClick={(e) => checkboxClick(e, item.id)}>
-                                                                                                    <input type="checkbox" className={`Checkbox Check${item.id}`} id={item.id} />
-                                                                                                </td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.code}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.brand}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.name}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.grip}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.bend}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.rigidity}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.height}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.price}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.renew}</td>
-                                                                                                <td onClick={() => changeItemClick(item)}>{item.count}</td>
-                                                                                            </tr>
-                                                                                        )
-                                                                                    })}
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </>
-                                                                    :
-                                                                    <div className="NoItems">Товаров нет</div>
-                                                                }
-                                                            </>
-                                                            :
-                                                            <div className="CreateContainer">
-                                                                <div className="CreateSub">Редактирование товара</div>
-                                                                <div className="InputClue">Артикул</div>
-                                                                <input type="text" placeholder="Артикул" name="code" maxLength={250} value={changeItem.code} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Фирма</div>
-                                                                <input type="text" placeholder="Фирма" name="brand" maxLength={250} value={changeItem.brand} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Название</div>
-                                                                <input type="text" placeholder="Название" name="name" maxLength={250} value={changeItem.name} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Описание</div>
-                                                                <textarea placeholder="Описание" name="description" value={changeItem.description} onChange={handleChangeItem}></textarea>
-                                                                <div className="InputClue">Цена</div>
-                                                                <input type="text" placeholder="Цена" name="price" maxLength={9} value={changeItem.price} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Хват</div>
-                                                                <input type="text" placeholder="Хват" name="grip" maxLength={250} value={changeItem.grip} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Загиб</div>
-                                                                <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={changeItem.bend} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Жесткость</div>
-                                                                <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={changeItem.rigidity} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Высота</div>
-                                                                <input type="text" placeholder="Высота" name="height" maxLength={9} value={changeItem.height} onChange={handleChangeItem} />
-                                                                <div className="InputClue">Ремонт</div>
-                                                                <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={changeItem.renew} onChange={handleChangeItem} />
-                                                                <div className="CreateWarning restWarning">Заполните все поля!</div>
-                                                                <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
-                                                                <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
-                                                            </div>
-                                                        }
-                                                    </>
-                                                    :
-                                                    <div className="LoaderContainer2">
-                                                        <div className="LoaderLight"></div>
+                                                                        </>
+                                                                        :
+                                                                        <div className="NoItems">Товаров нет</div>
+                                                                    }
+                                                                </>
+                                                                :
+                                                                <div className="CreateContainer">
+                                                                    <div className="CreateSub">Редактирование товара</div>
+                                                                    <div className="InputClue">Артикул</div>
+                                                                    <input type="text" placeholder="Артикул" name="code" maxLength={250} value={changeItem.code} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Фирма</div>
+                                                                    <input type="text" placeholder="Фирма" name="brand" maxLength={250} value={changeItem.brand} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Название</div>
+                                                                    <input type="text" placeholder="Название" name="name" maxLength={250} value={changeItem.name} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Цена</div>
+                                                                    <input type="text" placeholder="Цена" name="price" maxLength={9} value={changeItem.price} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Хват</div>
+                                                                    <input type="text" placeholder="Хват" name="grip" maxLength={250} value={changeItem.grip} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Загиб</div>
+                                                                    <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={changeItem.bend} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Жесткость</div>
+                                                                    <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={changeItem.rigidity} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Высота</div>
+                                                                    <input type="text" placeholder="Высота" name="height" maxLength={9} value={changeItem.height} onChange={handleChangeItem} />
+                                                                    <div className="InputClue">Ремонт</div>
+                                                                    <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={changeItem.renew} onChange={handleChangeItem} />
+                                                                    <div className="CreateWarning restWarning">Заполните все поля!</div>
+                                                                    <div className="CreateItemBtn" onClick={changeConfirm}>Сохранить</div>
+                                                                    <div className="CreateCancelItemBtn" onClick={cancelChange}>Отменить</div>
+                                                                </div>
+                                                            }
+                                                        </>
+                                                        :
+                                                        <div className="LoaderContainer2">
+                                                            <div className="LoaderLight"></div>
+                                                        </div>
+                                                    }
+                                                </>
+                                                :
+                                                <>
+                                                    <div className="CreateContainer">
+                                                        <div className="CreateSub">Добавление товара</div>
+                                                        <div className="InputClue">Артикул</div>
+                                                        <input type="text" placeholder="Артикул" name="code" maxLength={250} value={data.code} onChange={handleChange} />
+                                                        <div className="InputClue">Фирма</div>
+                                                        <input type="text" placeholder="Фирма" name="brand" maxLength={250} value={data.brand} onChange={handleChange} />
+                                                        <div className="InputClue">Название</div>
+                                                        <input type="text" placeholder="Название" name="name" maxLength={250} value={data.name} onChange={handleChange} />
+                                                        <div className="InputClue">Цена</div>
+                                                        <input type="text" placeholder="Цена" name="price" maxLength={9} value={data.price} onChange={handleChange} />
+                                                        <div className="InputClue">Хват</div>
+                                                        <input type="text" placeholder="Хват" name="grip" maxLength={250} value={data.grip} onChange={handleChange} />
+                                                        <div className="InputClue">Загиб</div>
+                                                        <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={data.bend} onChange={handleChange} />
+                                                        <div className="InputClue">Жесткость</div>
+                                                        <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={data.rigidity} onChange={handleChange} />
+                                                        <div className="InputClue">Высота</div>
+                                                        <input type="text" placeholder="Высота" name="height" maxLength={9} value={data.height} onChange={handleChange} />
+                                                        <div className="InputClue">Ремонт</div>
+                                                        <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={data.renew} onChange={handleChange} />
+                                                        <div className="CreateWarning restWarning">Заполните все поля!</div>
+                                                        <div className="CreateWarning restError">Такой товар уже существует!</div>
+                                                        <div className="CreateItemBtn" onClick={createOldItem}>Создать</div>
+                                                        <div className="CreateCancelItemBtn" onClick={cancelCreate}>Отменить</div>
                                                     </div>
-                                                }
-                                            </>
-                                            :
-                                            <>
-                                                <div className="CreateContainer">
-                                                    <div className="CreateSub">Добавление товара</div>
-                                                    <div className="InputClue">Артикул</div>
-                                                    <input type="text" placeholder="Артикул" name="code" maxLength={250} value={data.code} onChange={handleChange} />
-                                                    <div className="InputClue">Фирма</div>
-                                                    <input type="text" placeholder="Фирма" name="brand" maxLength={250} value={data.brand} onChange={handleChange} />
-                                                    <div className="InputClue">Название</div>
-                                                    <input type="text" placeholder="Название" name="name" maxLength={250} value={data.name} onChange={handleChange} />
-                                                    <div className="InputClue">Описание</div>
-                                                    <textarea placeholder="Описание" name="description" value={data.description} onChange={handleChange}></textarea>
-                                                    <div className="InputClue">Цена</div>
-                                                    <input type="text" placeholder="Цена" name="price" maxLength={9} value={data.price} onChange={handleChange} />
-                                                    <div className="InputClue">Хват</div>
-                                                    <input type="text" placeholder="Хват" name="grip" maxLength={250} value={data.grip} onChange={handleChange} />
-                                                    <div className="InputClue">Загиб</div>
-                                                    <input type="text" placeholder="Загиб" name="bend" maxLength={9} value={data.bend} onChange={handleChange} />
-                                                    <div className="InputClue">Жесткость</div>
-                                                    <input type="text" placeholder="Жесткость" name="rigidity" maxLength={9} value={data.rigidity} onChange={handleChange} />
-                                                    <div className="InputClue">Высота</div>
-                                                    <input type="text" placeholder="Высота" name="height" maxLength={9} value={data.height} onChange={handleChange} />
-                                                    <div className="InputClue">Ремонт</div>
-                                                    <input type="text" placeholder="Ремонт" name="renew" maxLength={250} value={data.renew} onChange={handleChange} />
-                                                    <div className="CreateWarning restWarning">Заполните все поля!</div>
-                                                    <div className="CreateItemBtn" onClick={createOldItem}>Создать</div>
-                                                    <div className="CreateCancelItemBtn" onClick={cancelCreate}>Отменить</div>
+                                                </>
+                                            }
+                                        </>
+                                        :
+                                        <>
+                                            <div className="TableInput tablefile">
+                                                <input
+                                                    className="tablefileInput"
+                                                    type="file"
+                                                    accept=".xlsx, .xls"
+                                                    multiple={false}
+                                                    id="tablefile"
+                                                    name="files"
+                                                    onChange={(e) => {
+                                                        setFiles(e)
+                                                        tableUpload(e)
+                                                    }}
+                                                />
+                                                <div className="FileInfo tablefileUnset Showed">
+                                                    <div className="FileText">
+                                                        <PiTable size={30} />
+                                                        <div className="FileTextLoad">Таблица товаров</div>
+                                                    </div>
+                                                    <div className="FileClue">Нажмите на поле или перетащите файл</div>
+                                                    <div className="FileClue">Формат - xlsx</div>
                                                 </div>
-                                            </>
-                                        }
-                                    </>
+                                                <div className="FileInfo tablefileSet">
+                                                    <div className="FileText">
+                                                        <PiTable size={30} />
+                                                        <div className="FileTextLoad tablefileName"></div>
+                                                    </div>
+                                                    <div className="FileClue">Наведите курсор, чтобы увидеть названия файлов</div>
+                                                </div>
+                                            </div>
+                                            <div className="files FileClear tablefileClear" id="tablefile" name="files" onClick={clearFiles}>Очистить поле</div>
+                                            <div className={`UploadBtn ${table ? 'UploadActive' : ''}`} onClick={tableSend}>Выгрузить</div>
+                                            {uploading &&
+                                                <div className="Uploading">
+                                                    <div className="LoaderSmall"></div>
+                                                    <span>Не покидайте страницу!</span>
+                                                </div>
+                                            }
+                                            {uploaded &&
+                                                <div className="Uploading Success">Успешно выгружено</div>
+                                            }
+                                            <div className="TableXLClue">Правила оформления таблицы:</div>
+                                            <div className="TableXLClue">
+                                                1. Первая строка - названия столбцов. Обязательно должны присутствовать столбцы:
+                                                Артикул, Фирма, Название, Описание, Цена, Хват, Загиб, Жесткость, Высота, Ремонт, Количество, Тип.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                2. Цена, Загиб, Жесткость, Высота и Количество могут принимать только числовые значения.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                3. Тип может принимать следующие значения: orig — для оригинала, rep — для реплики, vos — для восстановленных/бу.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                4. Если тип товара — оригинал или реплика, обязательно должны быть заполнены поля Артикул, Фирма,
+                                                Название, Описание, Цена, Хват, Загиб, Жесткость, Количество, Тип.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                5. Если тип товара — восстановленные/бу, обязательно должны быть заполнены поля Артикул, Фирма,
+                                                Название, Цена, Хват, Загиб, Жесткость, Высота, Ремонт, Тип.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                6. Все товары должны быть уникальными. Если в таблице есть товары с одновременно одинаковым артикулом, хватом, загибом,
+                                                жесткостью и ремонтом (у восстановленных), то в базу будет добавлен только один из этих товаров.
+                                            </div>
+                                            <div className="TableXLClue">
+                                                7. Товары, которые нарушают правила оформления, не будут добавлены в базу.
+                                            </div>
+                                            <div className="TableXLClue">Пример правильной таблицы:</div>
+                                            <div className="TableWrap3">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>Артикул</th>
+                                                            <th>Фирма</th>
+                                                            <th>Название</th>
+                                                            <th>Описание</th>
+                                                            <th>Цена</th>
+                                                            <th>Хват</th>
+                                                            <th>Загиб</th>
+                                                            <th>Жесткость</th>
+                                                            <th>Высота</th>
+                                                            <th>Ремонт</th>
+                                                            <th>Количество</th>
+                                                            <th>Тип</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>А123</td>
+                                                            <td>Фирма1</td>
+                                                            <td>Название1</td>
+                                                            <td>Описание1</td>
+                                                            <td>36990</td>
+                                                            <td>Правый</td>
+                                                            <td>28</td>
+                                                            <td>70</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>50</td>
+                                                            <td>orig</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>B124</td>
+                                                            <td>Фирма2</td>
+                                                            <td>Название2</td>
+                                                            <td>Описание2</td>
+                                                            <td>24990</td>
+                                                            <td>Левый</td>
+                                                            <td>29</td>
+                                                            <td>90</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>20</td>
+                                                            <td>rep</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>C125</td>
+                                                            <td>Фирма3</td>
+                                                            <td>Название3</td>
+                                                            <td></td>
+                                                            <td>15990</td>
+                                                            <td>Правый</td>
+                                                            <td>28</td>
+                                                            <td>70</td>
+                                                            <td>100</td>
+                                                            <td>Крюк</td>
+                                                            <td></td>
+                                                            <td>vos</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </>
                             }
                         </div>
                     </div>

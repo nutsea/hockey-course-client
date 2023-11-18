@@ -31,6 +31,10 @@ a {
     color: unset;
 }
 
+input {
+    border-radius: unset;
+}
+
 html {
     margin: 0;
     padding: 0;
@@ -106,6 +110,17 @@ body {
     width: 48px;
     height: 48px;
     border: 5px solid white;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+}
+
+.LoaderSmall {
+    width: 15px;
+    height: 15px;
+    border: 2px solid white;
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;

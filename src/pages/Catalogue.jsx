@@ -625,7 +625,7 @@ export const Catalogue = observer(({ type }) => {
                                                             </div>
                                                             :
                                                             <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
-                                                                <div><MdPhotoCamera size={100} /></div>
+                                                                <div><MdPhotoCamera size={50} /></div>
                                                                 <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
                                                                     <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
                                                                 </div>

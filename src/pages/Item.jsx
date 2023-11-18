@@ -6,6 +6,7 @@ import '../styles/item.scss'
 
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai'
 import { IoIosArrowUp } from 'react-icons/io'
+import { MdPhotoCamera } from 'react-icons/md'
 
 import sizes1 from '../assets/images/Sizes1.jpg'
 import sizes2 from '../assets/images/Sizes2.png'
@@ -353,7 +354,13 @@ const Item = () => {
                                             :
                                             <>
                                                 <div className="SliderImage Visible">
-                                                    <img src={`${process.env.REACT_APP_API_URL + item.img}`} alt="Фото клюшки" />
+                                                    {item.img ?
+                                                        <img src={`${process.env.REACT_APP_API_URL + item.img}`} alt="Фото клюшки" />
+                                                        :
+                                                        <div className="ItemImg NoneImg">
+                                                            <div><MdPhotoCamera size={50} /></div>
+                                                        </div>
+                                                    }
                                                 </div>
                                             </>
                                         }

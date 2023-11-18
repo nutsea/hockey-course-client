@@ -219,7 +219,7 @@ function App() {
                     <div className="FWrap2">
                         <div className="FLine"></div>
                         <div className="FRevs">
-                            <iframe className="FMap" title="map" src="https://yandex.ru/map-widget/v1/?um=constructor%3Af22f2244872dd2cbea656f73fcc6872d6ac6cc1914985c122a26e69c6be8c85b&amp;source=constructor" width="300" height="225" frameborder="0"></iframe>
+                            <iframe className="FMap" title="map" src="https://yandex.ru/map-widget/v1/?um=constructor%3Af22f2244872dd2cbea656f73fcc6872d6ac6cc1914985c122a26e69c6be8c85b&amp;source=constructor" width="300" height="225"></iframe>
                             <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
                                 <img src={yandex} alt="" />
                                 <div>Отзывы на Яндекс.Картах</div>

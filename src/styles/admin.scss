@@ -88,7 +88,7 @@
                 color: #2c2c2c;
                 padding: 5px 10px;
                 margin-left: 2px;
-                transition: all 0.1s linear;
+                transition: opacity 0.1s linear, transform 0.1s linear;
                 cursor: pointer;
 
                 &:hover {
@@ -524,6 +524,162 @@
 .Chosen {
     background-color: white !important;
     color: #2c2c2c;
+}
+
+.TableInput {
+    max-width: calc(400px - 2px);
+    height: 100px;
+    border: dashed 1px white;
+    position: relative;
+    transition: background-color 0.1s linear;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .FileInfo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .FileText {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            .FileTextLoad {
+                margin-left: 5px;
+            }
+        }
+
+        .FileClue {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 5px;
+            padding: 0 10px;
+            text-align: center;
+        }
+    }
+
+    .Showed {
+        display: flex;
+    }
+
+    input {
+        z-index: 5;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        padding: 0 !important;
+        margin: 0 !important;
+        opacity: 0;
+        cursor: pointer;
+    }
+}
+
+.FileClear {
+    font-size: 14px;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    display: none;
+}
+
+.FileClear.Showed {
+    display: block;
+}
+
+.UploadBtn {
+    margin-top: 10px;
+    max-width: calc(400px - 40px);
+    padding: 10px 20px;
+    text-align: center;
+    font-weight: 500;
+    background-color: #636363;
+    transition: opacity 0.1s linear, background-color 0.1s linear;
+}
+
+.UploadActive {
+    background-color: forestgreen;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.Uploading {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+        margin-left: 5px;
+        font-size: 14px;
+    }
+}
+
+.Success {
+    color: forestgreen;
+}
+
+.TableXLClue {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    max-width: 400px;
+    line-height: 18px;
+}
+
+.TableWrap3 {
+    table {
+        margin-top: 5px;
+        color: #2c2c2c;
+        background-color: white;
+        background-color: #2c2c2c4f;
+        font-size: 14px;
+
+        tbody {
+            tr {
+                &:nth-child(odd) {
+                    background-color: white;
+                }
+
+                &:nth-child(even) {
+                    background-color: #e7e9eb;
+                }
+
+                th {
+                    padding: 5px;
+                    text-align: left;
+                    font-weight: 600;
+                    background-color: white;
+                    cursor: auto;
+                }
+
+                td {
+                    padding: 5px;
+                    text-align: left;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1020px) {
+    .TableWrap3 {
+        overflow-x: scroll !important;
+    }
 }
 
 @media (max-width: 970px) {

@@ -205,7 +205,12 @@ export const updateItemAndImages = async (id, code, brand, name, description, pr
     })
 }
 
-export const orderItems = (id, count) => {
-    const { data } = $host.post('api/item/buy', { id, count })
+export const orderItems = async (id, count) => {
+    const { data } = await $host.post('api/item/buy', { id, count })
+    return data
+}
+
+export const createMany = async(rows) => {
+    const { data } = await $host.post('api/item/createxl', { rows })
     return data
 }
