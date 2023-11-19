@@ -11,7 +11,7 @@ import gis from './assets/icons/gis.jpeg'
 import yandex from './assets/icons/yandex.png'
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { callAdd } from "./http/bxApi";
+import { callAdd, formAdd } from "./http/bxApi";
 
 function App() {
     const navigate = useNavigate()
@@ -21,6 +21,8 @@ function App() {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [sendNumber, setSendNumber] = useState('')
     const [sendName, setSendName] = useState('')
+    const [sendNumber2, setSendNumber2] = useState('')
+    const [phoneNumber2, setPhoneNumber2] = useState('')
 
     const chooseType = (e) => {
         setType(e.target.id)
@@ -103,21 +105,35 @@ function App() {
                     break
             }
             const newCleaned = ('7' + formattedNumber).replace(/\D/g, '')
-            setPhoneNumber(formattedNumber)
-            setSendNumber(newCleaned)
+            if (e.target.id !== 'num2') {
+                setPhoneNumber(formattedNumber)
+                setSendNumber(newCleaned)
+            } else {
+                setPhoneNumber2(formattedNumber)
+                setSendNumber2(newCleaned)
+            }
         }
     }
 
     const handlePhoneChange = (e) => {
         const formattedNumber = formatPhoneNumber(e)
         const cleaned = ('' + e.target.value).replace(/\D/g, '')
-        setPhoneNumber(formattedNumber)
-        setSendNumber('7' + cleaned)
+        if (e.target.id !== 'num2') {
+            setPhoneNumber(formattedNumber)
+            setSendNumber('7' + cleaned)
+        } else {
+            setPhoneNumber2(formattedNumber)
+            setSendNumber2('7' + cleaned)
+        }
     }
 
     const formatPhoneNumber = (e) => {
         const cleaned = ('' + e.target.value).replace(/\D/g, '')
-        setSendNumber('7' + cleaned)
+        if (e.target.id !== 'num2') {
+            setSendNumber('7' + cleaned)
+        } else {
+            setSendNumber2('7' + cleaned)
+        }
         const match = cleaned.match(/^(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})$/)
         let formattedNumber
         switch (cleaned.length) {
@@ -170,6 +186,28 @@ function App() {
             setPhoneNumber('')
         }
     }
+
+    const closeForm = (e) => {
+        if (!e.target.classList.contains('form'))
+        e.target.classList.add('None')
+    }
+
+    const sendForm = () => {
+        if (sendNumber2.length === 11) {
+            formAdd(sendNumber2)
+            setSendNumber2('')
+            setPhoneNumber2('')
+            document.querySelector('.MinuteForm').classList.add('None')
+        }
+    }
+
+    useEffect(() => {
+        if (currentUrl !== '/admin/' && currentUrl !== '/admin') {
+            setTimeout(() => {
+                document.querySelector('.MinuteForm').classList.remove('None')
+            }, 90000)
+        }
+    }, [currentUrl])
 
     return (
         <div className="App">
@@ -250,6 +288,27 @@ function App() {
                 </div>
                 <div className="FooterBottom">© Все права защищены 2016, HOCKEY STICKS TOP</div>
             </footer>
+            <div className="MinuteForm None" onClick={closeForm}>
+                <div className="MContainer form">
+                    <div className="MSub form">Введите ваш номер, мы перезвоним!</div>
+                    <div className="InputContainer form">
+                        <span className="PreNum form">+7&nbsp;</span>
+                        <input
+                            className="InputNumber form"
+                            id="num2"
+                            type="text"
+                            maxLength="15"
+                            value={phoneNumber2}
+                            onChange={(e) => {
+                                handlePhoneChange(e)
+                            }}
+                            onKeyDown={handleBackspace}
+                            placeholder="(999) 999-99-99"
+                        />
+                    </div>
+                    <div className={`FSubmit form ${sendNumber2.length === 11 ? 'SubmitRed' : ''}`} onClick={sendForm}>Отправить</div>
+                </div>
+            </div>
         </div>
     );
 }
