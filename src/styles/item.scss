@@ -212,6 +212,25 @@
                     margin-left: 15px;
                 }
 
+                .Zero {
+                    pointer-events: none;
+                    border: solid 1px #585858;
+                    color: #585858;
+                    position: relative;
+                    overflow: hidden;
+
+                    &::before {
+                        content: '';
+                        height: 1px;
+                        width: 113.5%;
+                        background-color: #585858;
+                        position: absolute;
+                        left: -7%;
+                        top: 49%;
+                        transform: rotate(26deg);
+                    }
+                }
+
                 .Selected {
                     background-color: #d43434;
                     color: white;

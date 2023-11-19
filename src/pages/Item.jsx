@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { findImages, findItem, findSameItems, getCount, orderItems } from "../http/itemApi";
+import { findCombinations, findImages, findItem, findSameItems, orderItems } from "../http/itemApi";
 
 import '../styles/item.scss'
 
@@ -33,6 +33,7 @@ const Item = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [sendNumber, setSendNumber] = useState('')
     const [sendName, setSendName] = useState('')
+    const [combs, setCombs] = useState('')
 
     const sortAscending = (arr) => {
         return arr.slice().sort((a, b) => a - b)
@@ -42,11 +43,13 @@ const Item = () => {
         Promise.all([
             findItem(id),
             findSameItems(code),
-            findImages(id)
-        ]).then(([itemData, sameData, imagesData]) => {
+            findImages(id),
+            findCombinations(code)
+        ]).then(([itemData, sameData, imagesData, combsData]) => {
             setItem(itemData)
             setSame(sameData)
             setImages(imagesData)
+            setCombs(combsData)
             setGrips([...new Set(sameData.map(item => item.grip))])
             setBends(sortAscending([...new Set(sameData.map(item => item.bend))]))
             setRigidities(sortAscending([...new Set(sameData.map(item => item.rigidity))]))
@@ -65,55 +68,238 @@ const Item = () => {
 
     const gripClick = (e, grip) => {
         const all = document.getElementsByClassName('GripParam')
-        for (let i of all) {
-            i.classList.remove('Selected')
+        if (e.target.classList.contains('Selected')) {
+            e.target.classList.remove('Selected')
+            setChooseGrip(null)
+            setDbCount(null)
+        } else {
+            for (let i of all) {
+                i.classList.remove('Selected')
+            }
+            e.target.classList.add('Selected')
+            setChooseGrip(grip)
+            itemCount(grip, chooseBend, chooseRigidity)
         }
-        e.target.classList.add('Selected')
-        setChooseGrip(grip)
-        itemCount(grip, chooseBend, chooseRigidity)
     }
 
     const bendClick = (e, bend) => {
         const all = document.getElementsByClassName('BendParam')
-        for (let i of all) {
-            i.classList.remove('Selected')
+        if (e.target.classList.contains('Selected')) {
+            e.target.classList.remove('Selected')
+            setChooseBend(null)
+            setDbCount(null)
+        } else {
+            for (let i of all) {
+                i.classList.remove('Selected')
+            }
+            e.target.classList.add('Selected')
+            setChooseBend(bend)
+            itemCount(chooseGrip, bend, chooseRigidity)
         }
-        e.target.classList.add('Selected')
-        setChooseBend(bend)
-        itemCount(chooseGrip, bend, chooseRigidity)
     }
 
     const rigidityClick = (e, rigidity) => {
         const all = document.getElementsByClassName('RigidityParam')
-        for (let i of all) {
-            i.classList.remove('Selected')
+        if (e.target.classList.contains('Selected')) {
+            e.target.classList.remove('Selected')
+            setChooseRigidity(null)
+            setDbCount(null)
+        } else {
+            for (let i of all) {
+                i.classList.remove('Selected')
+            }
+            e.target.classList.add('Selected')
+            setChooseRigidity(rigidity)
+            itemCount(chooseGrip, chooseBend, rigidity)
         }
-        e.target.classList.add('Selected')
-        setChooseRigidity(rigidity)
-        itemCount(chooseGrip, chooseBend, rigidity)
     }
+
+    useEffect(() => {
+        const gripsEls = document.getElementsByClassName('GripParam')
+        const bendsEls = document.getElementsByClassName('BendParam')
+        const rigiditiesEls = document.getElementsByClassName('RigidityParam')
+        let grips = []
+        let bends = []
+        let rigidities = []
+        for (let i of gripsEls) {
+            grips.push(i.innerText)
+            i.classList.remove('Zero')
+        }
+        for (let i of bendsEls) {
+            bends.push(i.innerText)
+            i.classList.remove('Zero')
+        }
+        for (let i of rigiditiesEls) {
+            rigidities.push(i.innerText)
+            i.classList.remove('Zero')
+        }
+        console.log(combs)
+        if (chooseGrip) {
+            for (let i of bends) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == chooseGrip && j.thisBend == i && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Bend${i}`).classList.add('Zero')
+                }
+            }
+            for (let i of rigidities) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == chooseGrip && j.thisRigidity == i && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Rig${i}`).classList.add('Zero')
+                }
+            }
+        }
+        if (chooseBend) {
+            for (let i of grips) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == i && j.thisBend == chooseBend && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Grip${i}`).classList.add('Zero')
+                }
+            }
+            for (let i of rigidities) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisRigidity == i && j.thisBend == chooseBend && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Rig${i}`).classList.add('Zero')
+                }
+            }
+        }
+        if (chooseRigidity) {
+            for (let i of grips) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == i && j.thisRigidity == chooseRigidity && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Grip${i}`).classList.add('Zero')
+                }
+            }
+            for (let i of bends) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisBend == i && j.thisRigidity == chooseRigidity && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Bend${i}`).classList.add('Zero')
+                }
+            }
+        }
+        if (chooseGrip && chooseBend) {
+            for (let i of rigidities) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == chooseGrip && j.thisBend == chooseBend && j.thisRigidity == i && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Rig${i}`).classList.add('Zero')
+                }
+            }
+        }
+        if (chooseGrip && chooseRigidity) {
+            for (let i of bends) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == chooseGrip && j.thisBend == i && j.thisRigidity == chooseRigidity && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Bend${i}`).classList.add('Zero')
+                }
+            }
+        }
+        if (chooseBend && chooseRigidity) {
+            for (let i of grips) {
+                let isExist = false
+                for (let j of combs) {
+                    // eslint-disable-next-line
+                    if (j.thisGrip == i && j.thisBend == chooseBend && j.thisRigidity == chooseRigidity && j.thisCount > 0) {
+                        isExist = true
+                    }
+                }
+                if (!isExist) {
+                    document.getElementById(`Grip${i}`).classList.add('Zero')
+                }
+            }
+        }
+    }, [chooseGrip, chooseBend, chooseRigidity, combs])
 
     const itemCount = (grip, bend, rigidity) => {
         if (grip && bend && rigidity) {
             setDbCount(null)
-            getCount(item.code, grip, bend, rigidity).then((data) => {
-                setDbCount(data)
-                if (Number(data) === 0) {
-                    setCountColor('gray')
+            let thisCount = 0
+            for (let i of combs) {
+                // eslint-disable-next-line
+                if (i.thisGrip == grip && i.thisBend == bend && i.thisRigidity == rigidity) {
+                    thisCount = i.thisCount
                 }
-                if (Number(data) >= 1 && Number(data) <= 5) {
-                    setCountColor('gray')
-                }
-                if (Number(data) >= 6 && Number(data) <= 10) {
-                    setCountColor('blue')
-                }
-                if (Number(data) >= 11 && Number(data) <= 20) {
-                    setCountColor('yellow')
-                }
-                if (Number(data) > 20) {
-                    setCountColor('green')
-                }
-            })
+            }
+            setDbCount(thisCount)
+            if (thisCount === 0) {
+                setCountColor('gray')
+            }
+            if (thisCount >= 1 && thisCount <= 5) {
+                setCountColor('gray')
+            }
+            if (thisCount >= 6 && thisCount <= 10) {
+                setCountColor('blue')
+            }
+            if (thisCount >= 11 && thisCount <= 20) {
+                setCountColor('yellow')
+            }
+            if (thisCount > 20) {
+                setCountColor('green')
+            }
+            // getCount(item.code, grip, bend, rigidity).then((data) => {
+            //     setDbCount(data)
+            //     if (Number(data) === 0) {
+            //         setCountColor('gray')
+            //     }
+            //     if (Number(data) >= 1 && Number(data) <= 5) {
+            //         setCountColor('gray')
+            //     }
+            //     if (Number(data) >= 6 && Number(data) <= 10) {
+            //         setCountColor('blue')
+            //     }
+            //     if (Number(data) >= 11 && Number(data) <= 20) {
+            //         setCountColor('yellow')
+            //     }
+            //     if (Number(data) > 20) {
+            //         setCountColor('green')
+            //     }
+            // })
         }
     }
 
@@ -404,7 +590,7 @@ const Item = () => {
                                     <div className="ParamsBtns">
                                         {grips.map((grip, i) => {
                                             return (
-                                                <div key={i} className="Param GripParam" onClick={(e) => gripClick(e, grip)}>{grip}</div>
+                                                <div key={i} className="Param GripParam" id={`Grip${grip}`} onClick={(e) => gripClick(e, grip)}>{grip}</div>
                                             )
                                         })}
                                     </div>
@@ -412,7 +598,7 @@ const Item = () => {
                                     <div className="ParamsBtns">
                                         {bends.map((bend, i) => {
                                             return (
-                                                <div key={i} className="Param BendParam" onClick={(e) => bendClick(e, bend)}>{bend}</div>
+                                                <div key={i} className="Param BendParam" id={`Bend${bend}`} onClick={(e) => bendClick(e, bend)}>{bend}</div>
                                             )
                                         })}
                                     </div>
@@ -420,7 +606,7 @@ const Item = () => {
                                     <div className="ParamsBtns">
                                         {rigidities.map((rigidity, i) => {
                                             return (
-                                                <div key={i} className="Param RigidityParam" onClick={(e) => rigidityClick(e, rigidity)}>{rigidity}</div>
+                                                <div key={i} className="Param RigidityParam" id={`Rig${rigidity}`} onClick={(e) => rigidityClick(e, rigidity)}>{rigidity}</div>
                                             )
                                         })}
                                     </div>

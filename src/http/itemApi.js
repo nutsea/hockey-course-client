@@ -210,7 +210,12 @@ export const orderItems = async (id, count) => {
     return data
 }
 
-export const createMany = async(rows) => {
+export const createMany = async (rows) => {
     const { data } = await $host.post('api/item/createxl', { rows })
+    return data
+}
+
+export const findCombinations = async (code) => {
+    const { data } = await $host.get('api/item/combs', { params: { code } })
     return data
 }
