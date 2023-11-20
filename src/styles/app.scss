@@ -292,19 +292,46 @@
         color: #2c2c2c;
 
         .MContainer {
-            width: 500px;
+            width: 800px;
             // height: 100px;
             padding: 20px;
             background-color: white;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            position: relative;
+
+            .CloseForm {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+                cursor: pointer;
+            }
+
+            .MImg {
+                width: 39%;
+                display: flex;
+
+                img {
+                    width: 100%;
+                }
+            }
+
+            .MContent {
+                width: 59%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
 
             .MSub {
                 text-align: center;
-                font-size: 18px;
+                font-size: 20px;
                 font-weight: 500;
             }
 
             .InputContainer {
-                margin-top: 10px;
+                margin-top: 30px;
                 padding: 2px 15px;
                 background-color: white;
                 display: flex;
@@ -452,6 +479,30 @@
 
     .FForm {
         margin-top: 20px !important;
+    }
+
+    .MContainer {
+        flex-direction: column !important;
+        overflow: hidden;
+    }
+
+    .CloseForm {
+        background-color: white;
+        border-radius: 100px;
+        right: 5px !important;
+        top: 5px !important;
+    }
+
+    .MImg {
+        display: block !important;
+        width: 100% !important;
+        height: 300px !important;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .MContent {
+        width: 100% !important;
     }
 }
 

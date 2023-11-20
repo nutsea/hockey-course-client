@@ -9,9 +9,11 @@ import tg from './assets/icons/tg.png'
 import inst from './assets/icons/inst.png'
 import gis from './assets/icons/gis.jpeg'
 import yandex from './assets/icons/yandex.png'
+import form from './assets/images/form.jpg'
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { callAdd, formAdd } from "./http/bxApi";
+import { IoIosCloseCircle } from 'react-icons/io'
 
 function App() {
     const navigate = useNavigate()
@@ -188,8 +190,9 @@ function App() {
     }
 
     const closeForm = (e) => {
+        const box = document.querySelector('.MinuteForm')
         if (!e.target.classList.contains('form'))
-        e.target.classList.add('None')
+            box && box.classList.add('None')
     }
 
     const sendForm = () => {
@@ -205,7 +208,7 @@ function App() {
         if (currentUrl !== '/admin/' && currentUrl !== '/admin') {
             setTimeout(() => {
                 document.querySelector('.MinuteForm').classList.remove('None')
-            }, 90000)
+            }, 100)
         }
     }, [currentUrl])
 
@@ -290,23 +293,29 @@ function App() {
             </footer>
             <div className="MinuteForm None" onClick={closeForm}>
                 <div className="MContainer form">
-                    <div className="MSub form">Введите ваш номер, мы перезвоним!</div>
-                    <div className="InputContainer form">
-                        <span className="PreNum form">+7&nbsp;</span>
-                        <input
-                            className="InputNumber form"
-                            id="num2"
-                            type="text"
-                            maxLength="15"
-                            value={phoneNumber2}
-                            onChange={(e) => {
-                                handlePhoneChange(e)
-                            }}
-                            onKeyDown={handleBackspace}
-                            placeholder="(999) 999-99-99"
-                        />
+                    <IoIosCloseCircle className="CloseForm" size={40} />
+                    <div className="MImg form">
+                        <img src={form} className="form" alt="Клюшки" />
                     </div>
-                    <div className={`FSubmit form ${sendNumber2.length === 11 ? 'SubmitRed' : ''}`} onClick={sendForm}>Отправить</div>
+                    <div className="MContent form">
+                        <div className="MSub form">Введите ваш номер, мы перезвоним!</div>
+                        <div className="InputContainer form">
+                            <span className="PreNum form">+7&nbsp;</span>
+                            <input
+                                className="InputNumber form"
+                                id="num2"
+                                type="text"
+                                maxLength="15"
+                                value={phoneNumber2}
+                                onChange={(e) => {
+                                    handlePhoneChange(e)
+                                }}
+                                onKeyDown={handleBackspace}
+                                placeholder="(999) 999-99-99"
+                            />
+                        </div>
+                        <div className={`FSubmit form ${sendNumber2.length === 11 ? 'SubmitRed' : ''}`} onClick={sendForm}>Отправить</div>
+                    </div>
                 </div>
             </div>
         </div>
