@@ -208,7 +208,7 @@ function App() {
         if (currentUrl !== '/admin/' && currentUrl !== '/admin') {
             setTimeout(() => {
                 document.querySelector('.MinuteForm').classList.remove('None')
-            }, 100)
+            }, 90000)
         }
     }, [currentUrl])
 
