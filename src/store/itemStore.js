@@ -26,6 +26,7 @@ export default class ItemStore {
     }
 
     async setItems(items) {
+        console.log(items)
         if (items) {
             this._items = items.rows
             this._amount = items.count

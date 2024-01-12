@@ -33,6 +33,7 @@ export const fetchMax = async () => {
 export const fetchItems = async (brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page) => {
     try {
         const { data } = await $host.get('api/item/all', { params: { brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page } })
+        console.log(data)
         return data
     } catch (e) {
         return null
