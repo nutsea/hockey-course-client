@@ -125,7 +125,10 @@ export const Catalogue = observer(({ type }) => {
         for (let i of links) {
             i.classList.remove('Lined')
         }
-        navigate(`/item/${item.id}/${item.code}`)
+        if (item.id)
+            navigate(`/item/${item.id}/${item.code}`)
+        else
+            navigate(`/item/${item.ids[0]}/${item.code}`)
     }
 
     let first = 1,
@@ -623,7 +626,7 @@ export const Catalogue = observer(({ type }) => {
                                                 const uniqueItem = catalogue.items.find(item => item.code === uniqueCode)
 
                                                 return (
-                                                    <div key={uniqueItem.id} className="ItemCard ItemCardMain">
+                                                    <div key={uniqueItem.ids[0]} className="ItemCard ItemCardMain">
                                                         {uniqueItem.img ?
                                                             <>
                                                                 {/*<div className={`ItemImg None IsImg${i}`}>*/}
@@ -640,14 +643,14 @@ export const Catalogue = observer(({ type }) => {
                                                                 {/*</div>*/}
                                                                 <div className={`ItemImg None IsImg${i}`}>
                                                                     <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
-                                                                    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                    <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
                                                                     </div>
                                                                 </div>
                                                                 <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
                                                                     <div className="LoaderMid"></div>
-                                                                    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                    <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
                                                                     </div>
                                                                 </div>
                                                             </>
