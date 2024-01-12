@@ -211,8 +211,21 @@ export const orderItems = async (id, count) => {
 }
 
 export const createMany = async (rows) => {
-    const { data } = await $host.post('api/item/createxl', { rows })
-    return data
+//    const { data } = await $host.post('api/item/createxl', { rows })
+//    return data
+    const batchSize = 10;
+    const totalBatches = Math.ceil(rows.length / batchSize);
+    const allResponses = [];
+
+    for (let i = 0; i < totalBatches; i++) {
+        const start = i * batchSize;
+        const end = (i + 1) * batchSize;
+        const batch = rows.slice(start, end);
+        const { data: responseData } = await $host.post('api/item/createxl', { rows: batch });
+        allResponses.push(responseData);
+    }
+
+    return allResponses;
 }
 
 export const findCombinations = async (code) => {
