@@ -45,6 +45,7 @@ export const Catalogue = observer(({ type }) => {
 
             await fetchItems(catalogue.brands, catalogue.grips, catalogue.bends, catalogue.rigidities, type, catalogue.min, catalogue.max, catalogue.limit, catalogue.page).then((data) => {
                 if (data) {
+                    console.log(data)
                     catalogue.setItems(data)
                     setPages(Math.ceil(data.count / catalogue.limit))
                     console.log(data.count)
@@ -627,7 +628,7 @@ export const Catalogue = observer(({ type }) => {
 
                                                 return (
                                                     <div key={uniqueItem.ids[0]} className="ItemCard ItemCardMain">
-                                                        {uniqueItem.img ?
+                                                        {uniqueItem.imgs[0] ?
                                                             <>
                                                                 {/*<div className={`ItemImg None IsImg${i}`}>*/}
                                                                 {/*    <img src={`${process.env.REACT_APP_API_URL + uniqueItem.img}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />*/}
