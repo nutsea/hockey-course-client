@@ -45,10 +45,8 @@ export const Catalogue = observer(({ type }) => {
 
             await fetchItems(catalogue.brands, catalogue.grips, catalogue.bends, catalogue.rigidities, type, catalogue.min, catalogue.max, catalogue.limit, catalogue.page).then((data) => {
                 if (data) {
-                    console.log(data)
                     catalogue.setItems(data)
                     setPages(Math.ceil(data.count / catalogue.limit))
-                    console.log(data.count)
                 }
                 setLoading(false)
             })
@@ -625,23 +623,11 @@ export const Catalogue = observer(({ type }) => {
                                         <div className="ItemsBoxShow">
                                             {[...new Set(catalogue.items.map(item => item.code))].map((uniqueCode, i) => {
                                                 const uniqueItem = catalogue.items.find(item => item.code === uniqueCode)
-
+                                                
                                                 return (
-                                                    <div key={uniqueItem.ids[0]} className="ItemCard ItemCardMain">
+                                                    <div key={uniqueItem.id} className="ItemCard ItemCardMain">
                                                         {uniqueItem.imgs[0] ?
                                                             <>
-                                                                {/*<div className={`ItemImg None IsImg${i}`}>*/}
-                                                                {/*    <img src={`${process.env.REACT_APP_API_URL + uniqueItem.img}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />*/}
-                                                                {/*    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>*/}
-                                                                {/*        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>*/}
-                                                                {/*    </div>*/}
-                                                                {/*</div>*/}
-                                                                {/*<div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>*/}
-                                                                {/*    <div className="LoaderMid"></div>*/}
-                                                                {/*    <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>*/}
-                                                                {/*        <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>*/}
-                                                                {/*    </div>*/}
-                                                                {/*</div>*/}
                                                                 <div className={`ItemImg None IsImg${i}`}>
                                                                     <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
                                                                     <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
@@ -664,9 +650,6 @@ export const Catalogue = observer(({ type }) => {
                                                             </div>
                                                         }
                                                         <div className="ItemInfo">
-                                                            {/*<div className="ItemBrand">{uniqueItem.brand}</div>*/}
-                                                            {/*<div className="ItemName">{uniqueItem.name}</div>*/}
-                                                            {/*<div className="ItemPrice">{uniqueItem.price} Р</div>*/}
                                                             <div className="ItemBrand">{uniqueItem.brands[0]}</div>
                                                             <div className="ItemName">{uniqueItem.names[0]}</div>
                                                             <div className="ItemPrice">{uniqueItem.prices[0]} Р</div>
