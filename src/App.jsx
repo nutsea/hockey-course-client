@@ -205,11 +205,15 @@ function App() {
     }
 
     useEffect(() => {
-        if (currentUrl !== '/admin/' && currentUrl !== '/admin') {
+        let date = new Date()
+        date = date.getDay() + ' ' + date.getMonth()
+        console.log(date)
+        if (date !== localStorage.getItem('formcheck') && currentUrl !== '/admin/' && currentUrl !== '/admin') {
             setTimeout(() => {
                 document.querySelector('.MinuteForm').classList.remove('None')
             }, 90000)
         }
+        localStorage.setItem('formcheck', date)
     }, [currentUrl])
 
     return (
