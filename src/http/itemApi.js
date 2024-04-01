@@ -30,11 +30,17 @@ export const fetchMax = async () => {
     return data
 }
 
-export const fetchItems = async (brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page) => {
+export const fetchItems = async (brands, grips, bends, rigidities, type, priceMin, priceMax, limitCount, page) => {
     try {
-        const { data } = await $host.get('api/item/all', { params: { brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page } })
-        console.log(data)
-        return data
+        if (type !== 'restored') {
+            let limit = limitCount
+            const { data } = await $host.get('api/item/all', { params: { brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page } })
+            return data
+        } else {
+            let limit = 10000000
+            const { data } = await $host.get('api/item/all', { params: { brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page } })
+            return data
+        }
     } catch (e) {
         return null
     }
@@ -179,8 +185,6 @@ export const updateItemAndImages = async (id, code, brand, name, description, pr
                     newImages.forEach((image) => {
                         formData.append('img', image)
                     })
-
-                    console.log(newImages)
 
                     const { data: data2 } = await $host.post('api/image', formData, {
                         headers: {
