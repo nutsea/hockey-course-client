@@ -208,11 +208,11 @@ function App() {
         let date = new Date()
         date = date.getDay() + ' ' + date.getMonth()
         console.log(date)
-        if (date !== localStorage.getItem('formcheck') && currentUrl !== '/admin/' && currentUrl !== '/admin') {
+        // if (date !== localStorage.getItem('formcheck') && currentUrl !== '/admin/' && currentUrl !== '/admin') {
             setTimeout(() => {
                 document.querySelector('.MinuteForm').classList.remove('None')
-            }, 90000)
-        }
+            }, 900)
+        // }
         localStorage.setItem('formcheck', date)
     }, [currentUrl])
 
