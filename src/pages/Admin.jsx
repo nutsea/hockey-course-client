@@ -100,7 +100,7 @@ const Admin = () => {
         if (e.target.classList.contains(`CheckAll`)) {
             for (let i of checkboxes) {
                 if (!i.classList.contains('CheckAll'))
-                i.checked ? i.checked = false : i.checked = true
+                    i.checked ? i.checked = false : i.checked = true
             }
         }
     }
@@ -1092,7 +1092,7 @@ const Admin = () => {
                                                                                 <table>
                                                                                     <tbody>
                                                                                         <tr>
-                                                                                            <th></th>
+                                                                                            <th><input type="checkbox" className={`Checkbox CheckAll`} onClick={checkboxClickAll} /></th>
                                                                                             <th>Артикул</th>
                                                                                             <th>Фирма</th>
                                                                                             <th>Название</th>
