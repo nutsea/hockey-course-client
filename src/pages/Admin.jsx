@@ -95,6 +95,16 @@ const Admin = () => {
         }
     }
 
+    const checkboxClickAll = (e) => {
+        const checkboxes = document.getElementsByClassName('Checkbox')
+        if (e.target.classList.contains(`CheckAll`)) {
+            for (let i of checkboxes) {
+                if (!i.classList.contains('CheckAll'))
+                i.checked ? i.checked = false : i.checked = true
+            }
+        }
+    }
+
     const checkboxThrow = () => {
         const checkboxes = document.getElementsByClassName('Checkbox')
         for (let i of checkboxes) {
@@ -107,7 +117,7 @@ const Admin = () => {
         const checkboxes = document.getElementsByClassName('Checkbox')
         let idArr = []
         for (let i of checkboxes) {
-            if (i.checked === true) idArr.push(i.id)
+            if (i.checked === true && !i.classList.contains('CheckAll')) idArr.push(i.id)
         }
         if (idArr.length > 0) {
             setToDelete(idArr)
@@ -539,7 +549,7 @@ const Admin = () => {
                                                                         <table>
                                                                             <tbody>
                                                                                 <tr>
-                                                                                    <th></th>
+                                                                                    <th><input type="checkbox" className={`Checkbox CheckAll`} onClick={checkboxClickAll} /></th>
                                                                                     <th>Артикул</th>
                                                                                     <th>Фирма</th>
                                                                                     <th>Название</th>
@@ -809,7 +819,7 @@ const Admin = () => {
                                                                             <table>
                                                                                 <tbody>
                                                                                     <tr>
-                                                                                        <th></th>
+                                                                                        <th><input type="checkbox" className={`Checkbox CheckAll`} onClick={checkboxClickAll} /></th>
                                                                                         <th>Артикул</th>
                                                                                         <th>Фирма</th>
                                                                                         <th>Название</th>
