@@ -56,7 +56,7 @@ export const dealAdd = (sendName, sendNumber, code, brand, name, grip, bend, rig
                 success: function (dealResult) {
                     console.log('Сделка успешно создана:', dealResult)
                     document.querySelector('.BuyModal')?.classList.add('ModalNone')
-                    window.open('http://localhost:3000/ordered', '_blank')
+                    window.open('https://hockeystickstop.com/ordered', '_blank')
                 },
                 error: function (dealError) {
                     console.error('Ошибка при создании сделки:', dealError)

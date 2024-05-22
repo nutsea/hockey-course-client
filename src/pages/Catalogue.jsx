@@ -126,11 +126,11 @@ export const Catalogue = observer(({ type }) => {
         // }
         if (item.id) {
             // navigate(`/item/${item.id}/${item.code}`)
-            window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
+            window.open(`https://hockeystickstop.com/item/${item.id}/${item.code}`, '_blank')
         }
         else {
             // navigate(`/item/${item.ids[0]}/${item.code}`)
-            window.open(`http://localhost:3000/item/${item.ids[0]}/${item.code}`, '_blank')
+            window.open(`https://hockeystickstop.com/item/${item.ids[0]}/${item.code}`, '_blank')
         }
 
         // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
