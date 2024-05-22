@@ -506,7 +506,7 @@ const Item = () => {
         if (sendName.length > 0 && sendNumber.length === 11) {
             dealAdd(sendName, sendNumber, item.code, item.brand, item.name, item.grip, item.bend, item.rigidity, item.price, count, null, null, item.type)
             orderItems(item.id, count)
-            document.querySelector('.BuyModal').classList.add('ModalNone')
+            // document.querySelector('.BuyModal').classList.add('ModalNone')
         }
     }
 
@@ -576,6 +576,7 @@ const Item = () => {
                                 </div>
                                 <div className="ItemParams">
                                     <div className="ItemBrand">{item.brand}</div>
+                                    <title>Клюшка хоккейная</title>
                                     <div className="ItemName">{item.name}</div>
                                     <div className="ItemCode">Арт. {item.code}</div>
                                     <div className="ItemCountContainer">
@@ -616,7 +617,8 @@ const Item = () => {
                                         <div className="CountDigit">{count}</div>
                                         <div className="CountBtn" onClick={countPlus}><AiOutlinePlus /></div>
                                     </div>
-                                    <div className={`ItemBuy ${chooseGrip && chooseBend && chooseRigidity ? 'BuyBtnActive' : ''}`} onClick={showModal}>КУПИТЬ</div>
+                                    <div className={`ItemBuy ${chooseGrip && chooseBend && chooseRigidity ? 'BuyBtnActive' : ''}`} onClick={showModal}>ОФОРМИТЬ ЗАЯВКУ</div>
+                                    <p className="OrderTip">После оформления заявки с вами свяжутся для уточнения данных по доставке и оплате</p>
                                 </div>
                             </div>
                             <div className="ItemInfo">
@@ -710,7 +712,7 @@ const Item = () => {
             {item &&
                 <div className="BuyModal ModalNone" onClick={closeModal}>
                     <div className="BuyForm form">
-                        <div className="BuySub form">Оформление заказа</div>
+                        <div className="BuySub form">Оформление заявки</div>
                         <div className="BuyClue form">Имя</div>
                         <input className="InputName form" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
                         <div className="BuyClue form">Номер телефона</div>
@@ -738,7 +740,7 @@ const Item = () => {
                         <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
                         <div className="BuyInfo form"><span className="form">Количество: </span>{count}</div>
                         <div className="BuyInfo BuyCost form">Стоимость: {item.price * count} Р</div>
-                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАКАЗ</div>
+                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАЯВКУ</div>
                     </div>
                 </div>
             }

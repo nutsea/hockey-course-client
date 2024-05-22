@@ -13,11 +13,11 @@ import GripFilter from "../components/GripFilter";
 import BendFilter from "../components/BendFilter";
 import RigidityFilter from "../components/RigidityFilter";
 import { fetchBends, fetchBrands, fetchGrips, fetchItems, fetchMax, fetchRigidities, orderItems } from "../http/itemApi";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { dealAdd } from "../http/bxApi";
 
 export const Catalogue = observer(({ type }) => {
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const { catalogue } = useContext(Context)
     const [loading, setLoading] = useState(true)
     const [itemsLoading, setItemsLoading] = useState(false)
@@ -120,14 +120,20 @@ export const Catalogue = observer(({ type }) => {
     }, [type])
 
     const handleNavigate = (item) => {
-        const links = document.getElementsByClassName('HType')
-        for (let i of links) {
-            i.classList.remove('Lined')
+        // const links = document.getElementsByClassName('HType')
+        // for (let i of links) {
+        //     i.classList.remove('Lined')
+        // }
+        if (item.id) {
+            // navigate(`/item/${item.id}/${item.code}`)
+            window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
         }
-        if (item.id)
-            navigate(`/item/${item.id}/${item.code}`)
-        else
-            navigate(`/item/${item.ids[0]}/${item.code}`)
+        else {
+            // navigate(`/item/${item.ids[0]}/${item.code}`)
+            window.open(`http://localhost:3000/item/${item.ids[0]}/${item.code}`, '_blank')
+        }
+
+        // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
     }
 
     let first = 1,
@@ -623,40 +629,58 @@ export const Catalogue = observer(({ type }) => {
                                         <div className="ItemsBoxShow">
                                             {[...new Set(catalogue.items.map(item => item.code))].map((uniqueCode, i) => {
                                                 const uniqueItem = catalogue.items.find(item => item.code === uniqueCode)
-                                                
+
                                                 if (uniqueItem) {
-                                                        return (
-                                                            <div key={i} className="ItemCard ItemCardMain">
-                                                                {uniqueItem.imgs[0] ?
-                                                                    <>
-                                                                        <div className={`ItemImg None IsImg${i}`}>
-                                                                            <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
-                                                                            <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
-                                                                                <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
-                                                                            <div className="LoaderMid"></div>
-                                                                            <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
-                                                                                <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                    :
-                                                                    <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
-                                                                        <div><MdPhotoCamera size={50} /></div>
-                                                                        <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                            <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                    return (
+                                                        <div key={i} className="ItemCard ItemCardMain">
+                                                            {uniqueItem.imgs[0] ?
+                                                                <>
+                                                                    <div className={`ItemImg None IsImg${i}`} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        {/* <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
+                                                                        <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
+                                                                        </div> */}
+                                                                        <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} />
+                                                                        <div className="ItemClick" id={uniqueItem.ids[0]}>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
+                                                                            {/* <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div> */}
                                                                         </div>
                                                                     </div>
-                                                                }
-                                                                <div className="ItemInfo">
-                                                                    <div className="ItemBrand">{uniqueItem.brands[0]}</div>
-                                                                    <div className="ItemName">{uniqueItem.names[0]}</div>
-                                                                    <div className="ItemPrice">{uniqueItem.prices[0]} Р</div>
+                                                                    {/* <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="LoaderMid"></div>
+                                                                        <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                        </div>
+                                                                    </div> */}
+                                                                    <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
+                                                                        <div className="LoaderMid"></div>
+                                                                        <div className="ItemClick" id={uniqueItem.ids[0]}>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                                :
+                                                                // <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
+                                                                //     <div><MdPhotoCamera size={50} /></div>
+                                                                //     <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
+                                                                //         <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
+                                                                //     </div>
+                                                                // </div>
+                                                                <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
+                                                                    <div><MdPhotoCamera size={50} /></div>
+                                                                    <div className="ItemClick" id={uniqueItem.id}>
+                                                                        <div className="ItemShow" id={uniqueItem.id}>ПРОСМОТР</div>
+                                                                    </div>
                                                                 </div>
+                                                            }
+                                                            <div className="ItemInfo">
+                                                                <div className="ItemBrand">{uniqueItem.brands[0]}</div>
+                                                                <div className="ItemName">{uniqueItem.names[0]}</div>
+                                                                <div className="ItemPrice">{uniqueItem.prices[0]} Р</div>
                                                             </div>
-                                                        )
+                                                        </div>
+                                                    )
                                                 } else return null
                                             })}
                                         </div>
@@ -718,7 +742,7 @@ export const Catalogue = observer(({ type }) => {
                                                             <th>Высота</th>
                                                             <th>Ремонт</th>
                                                             <th>Цена</th>
-                                                            <th>Купить</th>
+                                                            <th>Оформить заявку</th>
                                                         </tr>
                                                         {catalogue.items.map((item, i) => {
                                                             if (item.count > 0) {
@@ -737,7 +761,7 @@ export const Catalogue = observer(({ type }) => {
                                                                                 <td>{item.height}</td>
                                                                                 <td>{item.renew}</td>
                                                                                 <td className="ItemPrice">{item.price} Р</td>
-                                                                                <td className="ItemBuy"><div onClick={() => setItem(item)}>Купить</div></td>
+                                                                                <td className="ItemBuy"><div onClick={() => setItem(item)}>Оформить заявку</div></td>
                                                                             </>
                                                                         }
                                                                     </tr>
@@ -768,7 +792,7 @@ export const Catalogue = observer(({ type }) => {
             {item &&
                 <div className="BuyModal" onClick={closeModal}>
                     <div className="BuyForm form">
-                        <div className="BuySub form">Оформление заказа</div>
+                        <div className="BuySub form">Оформление заявки</div>
                         <div className="BuyClue form">Имя</div>
                         <input className="InputName form" type="text" placeholder="Имя" value={sendName} onChange={(e) => setSendName(e.target.value)} />
                         <div className="BuyClue form">Номер телефона</div>
@@ -797,7 +821,7 @@ export const Catalogue = observer(({ type }) => {
                         <div className="BuyInfo form"><span className="form">Ремонт: </span>{item.renew}</div>
                         <div className="BuyInfo form"><span className="form">Цена: </span>{item.price} Р</div>
                         <div className="BuyInfo BuyCost form">Стоимость: {item.price} Р</div>
-                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАКАЗ</div>
+                        <div className={`BuyConfirmBtn form ${sendNumber.length === 11 && sendName.length > 0 ? 'BuyConfirmActive' : ''}`} onClick={createDeal}>ОФОРМИТЬ ЗАЯВКУ</div>
                     </div>
                 </div>
             }

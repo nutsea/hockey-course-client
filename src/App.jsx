@@ -220,7 +220,7 @@ function App() {
         <div className="App">
             <header className="Header">
                 <div className="HeaderTop">
-                    <img src={logo} alt="Логотип" />
+                    <img src={logo} alt="Логотип" style={{cursor: 'pointer'}} onClick={() => navigate('/')} />
                 </div>
                 {!isAdmin() ?
                     <div className="HeaderBottom">
@@ -290,6 +290,7 @@ function App() {
                                 <a href="https://t.me/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
                                 <a href="https://instagram.com/hockey_sticks_top?igshid=MTNiYzNiMzkwZA==" target="_blank" rel="noreferrer"><img src={inst} alt="Инстаграм" /></a>
                             </div>
+                            <div className="Conf">Политика конфиденциальности</div>
                         </div>
                     </div>
                 </div>
