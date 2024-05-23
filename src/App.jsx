@@ -204,7 +204,19 @@ function App() {
         }
     }
 
+    function setFavicon(url) {
+        const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+        link.type = 'image/x-icon';
+        link.rel = 'shortcut icon';
+        link.href = url;
+        document.getElementsByTagName('head')[0].appendChild(link);
+    }
+
+    // Установите фавиконку при загрузке приложения
+    //   setFavicon('/favicon.ico');
+
     useEffect(() => {
+        setFavicon('/favicon.png')
         let date = new Date()
         date = date.getDay() + ' ' + date.getMonth()
         console.log(date)
@@ -220,7 +232,7 @@ function App() {
         <div className="App">
             <header className="Header">
                 <div className="HeaderTop">
-                    <img src={logo} alt="Логотип" style={{cursor: 'pointer'}} onClick={() => navigate('/')} />
+                    <img src={logo} alt="Логотип" style={{ cursor: 'pointer' }} onClick={() => navigate('/')} />
                 </div>
                 {!isAdmin() ?
                     <div className="HeaderBottom">

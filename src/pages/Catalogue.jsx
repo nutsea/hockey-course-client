@@ -127,10 +127,12 @@ export const Catalogue = observer(({ type }) => {
         if (item.id) {
             // navigate(`/item/${item.id}/${item.code}`)
             window.open(`https://hockeystickstop.com/item/${item.id}/${item.code}`, '_blank')
+            // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
         }
         else {
             // navigate(`/item/${item.ids[0]}/${item.code}`)
             window.open(`https://hockeystickstop.com/item/${item.ids[0]}/${item.code}`, '_blank')
+            // window.open(`http://localhost:3000/item/${item.ids[0]}/${item.code}`, '_blank')
         }
 
         // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
@@ -636,17 +638,17 @@ export const Catalogue = observer(({ type }) => {
                                                             {uniqueItem.imgs[0] ?
                                                                 <>
                                                                     <div className={`ItemImg None IsImg${i}`} onClick={() => handleNavigate(uniqueItem)}>
-                                                                        {/* <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} onClick={() => handleNavigate(uniqueItem)} />
-                                                                        <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
-                                                                            <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
-                                                                        </div> */}
                                                                         <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} />
                                                                         <div className="ItemClick" id={uniqueItem.ids[0]}>
                                                                             <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
-                                                                            {/* <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div> */}
                                                                         </div>
                                                                     </div>
+                                                                    {/* <a className={`ItemImg None IsImg${i}`} href={`https://hockeystickstop.com/item/${uniqueItem.id}/${uniqueItem.code}`}>
+                                                                        <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} />
+                                                                        <div className="ItemClick" id={uniqueItem.ids[0]}>
+                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
+                                                                        </div>
+                                                                    </a> */}
                                                                     {/* <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
                                                                         <div className="LoaderMid"></div>
                                                                         <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
