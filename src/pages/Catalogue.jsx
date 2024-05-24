@@ -678,7 +678,7 @@ export const Catalogue = observer(({ type }) => {
                                                             }
                                                             <div className="ItemInfo">
                                                                 <div className="ItemBrand">{uniqueItem.brands[0]}</div>
-                                                                <div className="ItemName">{uniqueItem.names[0]}</div>
+                                                                <div className="ItemName">Клюшка хоккейная {uniqueItem.names[0]}</div>
                                                                 <div className="ItemPrice">{uniqueItem.prices[0]} Р</div>
                                                             </div>
                                                         </div>
@@ -754,7 +754,7 @@ export const Catalogue = observer(({ type }) => {
                                                                             <>
                                                                                 <td>{item.brand}</td>
                                                                                 <td className="ItemName">
-                                                                                    <span>{item.name}</span>
+                                                                                    <span>Клюшка хоккейная {item.name}</span>
                                                                                     <span className="Code">Арт. {item.code}</span>
                                                                                 </td>
                                                                                 <td>{item.grip}</td>
@@ -815,7 +815,7 @@ export const Catalogue = observer(({ type }) => {
                         <div className="BuyClue form">Информация о заказе</div>
                         <div className="BuyInfo form"><span className="form">Артикул: </span>{item.code}</div>
                         <div className="BuyInfo form"><span className="form">Фирма: </span>{item.brand}</div>
-                        <div className="BuyInfo form"><span className="form">Название: </span>{item.name}</div>
+                        <div className="BuyInfo form"><span className="form">Название: </span>Клюшка хоккейная {item.name}</div>
                         <div className="BuyInfo form"><span className="form">Хват: </span>{item.grip}</div>
                         <div className="BuyInfo form"><span className="form">Загиб: </span>{item.bend}</div>
                         <div className="BuyInfo form"><span className="form">Жесткость: </span>{item.rigidity}</div>

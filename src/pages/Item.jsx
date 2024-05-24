@@ -577,7 +577,7 @@ const Item = () => {
                                 <div className="ItemParams">
                                     <div className="ItemBrand">{item.brand}</div>
                                     <title>Клюшка хоккейная</title>
-                                    <div className="ItemName">{item.name}</div>
+                                    <div className="ItemName">Клюшка хоккейная {item.name}</div>
                                     <div className="ItemCode">Арт. {item.code}</div>
                                     <div className="ItemCountContainer">
                                         {dbCount || dbCount === 0 ?
@@ -632,7 +632,7 @@ const Item = () => {
                                         <>
                                             <div className="InfoDesc">
                                                 <div className="IDText">
-                                                    <div className="InfoSub">{item.name}</div>
+                                                    <div className="InfoSub">Клюшка хоккейная {item.name}</div>
                                                     <div className="InfoText">
                                                         {item.description.split('\n').map((text, i) => {
                                                             return (
@@ -733,7 +733,7 @@ const Item = () => {
                         <div className="BuyClue form">Информация о заказе</div>
                         <div className="BuyInfo form"><span className="form">Артикул: </span>{item.code}</div>
                         <div className="BuyInfo form"><span className="form">Фирма: </span>{item.brand}</div>
-                        <div className="BuyInfo form"><span className="form">Название: </span>{item.name}</div>
+                        <div className="BuyInfo form"><span className="form">Название: </span>Клюшка хоккейная {item.name}</div>
                         <div className="BuyInfo form"><span className="form">Хват: </span>{chooseGrip}</div>
                         <div className="BuyInfo form"><span className="form">Загиб: </span>{chooseBend}</div>
                         <div className="BuyInfo form"><span className="form">Жесткость: </span>{chooseRigidity}</div>
