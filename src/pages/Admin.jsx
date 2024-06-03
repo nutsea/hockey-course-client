@@ -512,8 +512,8 @@ const Admin = () => {
                 <>
                     <div className="Panel">
                         <div className="PanelHead">
-                            <div className="PanelTab Chosen" id="original" onClick={chooseTab}>ОРИГИНАЛ</div>
-                            <div className="PanelTab" id="replica" onClick={chooseTab}>РЕПЛИКА</div>
+                            <div className="PanelTab Chosen" id="original" onClick={chooseTab}>НОВЫЕ</div>
+                            <div className="PanelTab" id="replica" onClick={chooseTab}>ПРЕДЗАКАЗ</div>
                             <div className="PanelTab" id="restored" onClick={chooseTab}>ВОССТАНОВЛЕННЫЕ / БУ</div>
                             <div className="PanelTab" id="upload" onClick={chooseTab}>ТАБЛИЦА</div>
                         </div>
@@ -1245,10 +1245,10 @@ const Admin = () => {
                                                 2. Цена, Загиб, Жесткость, Высота и Количество могут принимать только числовые значения.
                                             </div>
                                             <div className="TableXLClue">
-                                                3. Тип может принимать следующие значения: orig — для оригинала, rep — для реплики, vos — для восстановленных/бу.
+                                                3. Тип может принимать следующие значения: orig — для новых, rep — для предзаказа, vos — для восстановленных/бу.
                                             </div>
                                             <div className="TableXLClue">
-                                                4. Если тип товара — оригинал или реплика, обязательно должны быть заполнены поля Артикул, Фирма,
+                                                4. Если тип товара — новые или предзаказ, обязательно должны быть заполнены поля Артикул, Фирма,
                                                 Название, Описание, Цена, Хват, Загиб, Жесткость, Количество, Тип.
                                             </div>
                                             <div className="TableXLClue">

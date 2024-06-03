@@ -36,6 +36,18 @@ function App() {
         navigate('/')
     }
 
+    const handleNavigate = (e) => {
+        navigate(e.target.id)
+        const links = document.getElementsByClassName('HType')
+        for (let i of links) {
+            i.classList.remove('Lined')
+        }
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        })
+    }
+
     useEffect(() => {
         if (currentUrl === '/admin/' || currentUrl === '/admin') {
             setType('')
@@ -44,7 +56,7 @@ function App() {
                 i.classList.remove('Lined')
             }
         } else {
-            if (!currentUrl.includes('item'))
+            if (!currentUrl.includes('item') && !currentUrl.includes('confidence'))
                 document.getElementById(`${type}`).classList.add('Lined')
         }
     }, [currentUrl, type])
@@ -237,8 +249,8 @@ function App() {
                 {!isAdmin() ?
                     <div className="HeaderBottom">
                         <div className="HeaderTypes">
-                            <div className="HType Lined" id="original" onClick={chooseType}>ОРИГИНАЛ</div>
-                            <div className="HType" id="replica" onClick={chooseType}>РЕПЛИКА</div>
+                            <div className="HType Lined" id="original" onClick={chooseType}>НОВЫЕ</div>
+                            <div className="HType" id="replica" onClick={chooseType}>ПРЕДЗАКАЗ</div>
                             <div className="HType" id="restored" onClick={chooseType} >ВОССТАНОВЛЕННЫЕ / БУ</div>
                         </div>
                     </div>
@@ -302,7 +314,7 @@ function App() {
                                 <a href="https://t.me/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
                                 <a href="https://instagram.com/hockey_sticks_top?igshid=MTNiYzNiMzkwZA==" target="_blank" rel="noreferrer"><img src={inst} alt="Инстаграм" /></a>
                             </div>
-                            <div className="Conf">Политика конфиденциальности</div>
+                            <div className="Conf" id="/confidence" onClick={handleNavigate}>Политика конфиденциальности</div>
                         </div>
                     </div>
                 </div>

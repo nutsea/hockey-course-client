@@ -35,6 +35,7 @@ export const fetchItems = async (brands, grips, bends, rigidities, type, priceMi
         if (type !== 'restored') {
             let limit = limitCount
             const { data } = await $host.get('api/item/all', { params: { brands, grips, bends, rigidities, type, priceMin, priceMax, limit, page } })
+            console.log(data)
             return data
         } else {
             let limit = 10000000
