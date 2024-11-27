@@ -10,7 +10,7 @@ import { MdPhotoCamera } from 'react-icons/md'
 
 import sizes1 from '../assets/images/Sizes1.jpg'
 import sizes2 from '../assets/images/Sizes2.png'
-import { dealAdd } from "../http/bxApi";
+import { dealAdd } from "../http/botApi";
 
 const Item = () => {
     const { id, code } = useParams()
@@ -282,24 +282,6 @@ const Item = () => {
             if (thisCount > 20) {
                 setCountColor('green')
             }
-            // getCount(item.code, grip, bend, rigidity).then((data) => {
-            //     setDbCount(data)
-            //     if (Number(data) === 0) {
-            //         setCountColor('gray')
-            //     }
-            //     if (Number(data) >= 1 && Number(data) <= 5) {
-            //         setCountColor('gray')
-            //     }
-            //     if (Number(data) >= 6 && Number(data) <= 10) {
-            //         setCountColor('blue')
-            //     }
-            //     if (Number(data) >= 11 && Number(data) <= 20) {
-            //         setCountColor('yellow')
-            //     }
-            //     if (Number(data) > 20) {
-            //         setCountColor('green')
-            //     }
-            // })
         }
     }
 
@@ -683,15 +665,6 @@ const Item = () => {
                                                         </div>
                                                         <div className="ListItem">
                                                             • Средняя стоимость и срок доставки по России на 1-2 клюшки составляет 400 руб. и срок 3-4 дня (при отправки курьерской службой СДЭК).
-                                                        </div>
-                                                    </div>
-                                                    <div className="ShipSub SecondShipSub">САМОВЫВОЗ:</div>
-                                                    <div className="ShipList">
-                                                        <div className="ListItem">
-                                                            Магазин "Хоккейные клюшки ТОП"
-                                                        </div>
-                                                        <div className="ListItem">
-                                                            Адрес: г. Казань, пер. Односторонки Гривки 10, цокольный этаж.
                                                         </div>
                                                     </div>
                                                 </div>

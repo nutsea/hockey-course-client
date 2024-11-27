@@ -217,8 +217,6 @@ export const orderItems = async (id, count) => {
 }
 
 export const createMany = async (rows) => {
-//    const { data } = await $host.post('api/item/createxl', { rows })
-//    return data
     const batchSize = 10;
     const totalBatches = Math.ceil(rows.length / batchSize);
     const allResponses = [];

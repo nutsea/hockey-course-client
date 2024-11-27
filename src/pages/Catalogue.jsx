@@ -13,11 +13,9 @@ import GripFilter from "../components/GripFilter";
 import BendFilter from "../components/BendFilter";
 import RigidityFilter from "../components/RigidityFilter";
 import { fetchBends, fetchBrands, fetchGrips, fetchItems, fetchMax, fetchRigidities, orderItems } from "../http/itemApi";
-// import { useNavigate } from "react-router-dom";
-import { dealAdd } from "../http/bxApi";
+import { dealAdd } from "../http/botApi";
 
 export const Catalogue = observer(({ type }) => {
-    // const navigate = useNavigate()
     const { catalogue } = useContext(Context)
     const [loading, setLoading] = useState(true)
     const [itemsLoading, setItemsLoading] = useState(false)
@@ -120,22 +118,12 @@ export const Catalogue = observer(({ type }) => {
     }, [type])
 
     const handleNavigate = (item) => {
-        // const links = document.getElementsByClassName('HType')
-        // for (let i of links) {
-        //     i.classList.remove('Lined')
-        // }
         if (item.id) {
-            // navigate(`/item/${item.id}/${item.code}`)
-            window.open(`https://hockeystickstop.com/item/${item.id}/${item.code}`, '_blank')
-            // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
+            window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
         }
         else {
-            // navigate(`/item/${item.ids[0]}/${item.code}`)
-            window.open(`https://hockeystickstop.com/item/${item.ids[0]}/${item.code}`, '_blank')
-            // window.open(`http://localhost:3000/item/${item.ids[0]}/${item.code}`, '_blank')
+            window.open(`http://localhost:3000/item/${item.ids[0]}/${item.code}`, '_blank')
         }
-
-        // window.open(`http://localhost:3000/item/${item.id}/${item.code}`, '_blank')
     }
 
     let first = 1,
@@ -643,18 +631,6 @@ export const Catalogue = observer(({ type }) => {
                                                                             <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
                                                                         </div>
                                                                     </div>
-                                                                    {/* <a className={`ItemImg None IsImg${i}`} href={`https://hockeystickstop.com/item/${uniqueItem.id}/${uniqueItem.code}`}>
-                                                                        <img src={`${process.env.REACT_APP_API_URL + uniqueItem.imgs[0]}`} alt="Фото клюшки" onLoad={() => imageLoad(i)} />
-                                                                        <div className="ItemClick" id={uniqueItem.ids[0]}>
-                                                                            <div className="ItemShow" id={uniqueItem.ids[0]}>ПРОСМОТР</div>
-                                                                        </div>
-                                                                    </a> */}
-                                                                    {/* <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
-                                                                        <div className="LoaderMid"></div>
-                                                                        <div className="ItemClick" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>
-                                                                            <div className="ItemShow" id={uniqueItem.ids[0]} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                        </div>
-                                                                    </div> */}
                                                                     <div className={`ItemImg NoneImg NoneImg${i}`} id={`${i}noneimg`} onClick={() => handleNavigate(uniqueItem)}>
                                                                         <div className="LoaderMid"></div>
                                                                         <div className="ItemClick" id={uniqueItem.ids[0]}>
@@ -663,12 +639,6 @@ export const Catalogue = observer(({ type }) => {
                                                                     </div>
                                                                 </>
                                                                 :
-                                                                // <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
-                                                                //     <div><MdPhotoCamera size={50} /></div>
-                                                                //     <div className="ItemClick" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>
-                                                                //         <div className="ItemShow" id={uniqueItem.id} onClick={() => handleNavigate(uniqueItem)}>ПРОСМОТР</div>
-                                                                //     </div>
-                                                                // </div>
                                                                 <div className="ItemImg NoneImg" onClick={() => handleNavigate(uniqueItem)}>
                                                                     <div><MdPhotoCamera size={50} /></div>
                                                                     <div className="ItemClick" id={uniqueItem.id}>

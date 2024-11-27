@@ -6,13 +6,12 @@ import logo from './assets/images/Logo.png'
 import logo2 from './assets/images/Logo2.png'
 import vk from './assets/icons/vk.png'
 import tg from './assets/icons/tg.png'
-import inst from './assets/icons/inst.png'
 import gis from './assets/icons/gis.jpeg'
 import yandex from './assets/icons/yandex.png'
 import form from './assets/images/form.jpg'
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { callAdd, formAdd } from "./http/bxApi";
+import { callAdd, formAdd } from "./http/botApi";
 import { IoIosCloseCircle } from 'react-icons/io'
 
 function App() {
@@ -34,18 +33,6 @@ function App() {
         }
         e.target.classList.add('Lined')
         navigate('/')
-    }
-
-    const handleNavigate = (e) => {
-        navigate(e.target.id)
-        const links = document.getElementsByClassName('HType')
-        for (let i of links) {
-            i.classList.remove('Lined')
-        }
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        })
     }
 
     useEffect(() => {
@@ -224,9 +211,6 @@ function App() {
         document.getElementsByTagName('head')[0].appendChild(link);
     }
 
-    // Установите фавиконку при загрузке приложения
-    //   setFavicon('/favicon.ico');
-
     useEffect(() => {
         setFavicon('/favicon.png')
         let date = new Date()
@@ -288,12 +272,12 @@ function App() {
                     <div className="FWrap2">
                         <div className="FLine"></div>
                         <div className="FRevs">
-                            <iframe className="FMap" title="map" src="https://yandex.ru/map-widget/v1/?um=constructor%3Af22f2244872dd2cbea656f73fcc6872d6ac6cc1914985c122a26e69c6be8c85b&amp;source=constructor" width="300" height="225"></iframe>
-                            <a className="FRev" href="https://yandex.ru/maps/org/khokkeynyye_klyushki_top/49625901501/reviews/?ll=49.089625%2C55.812712&tab=reviews&z=16.53" target="_blank" rel="noreferrer">
+                            <iframe className="FMap" title="map" src="https://yandex.ru/map-widget/v1/?um=constructor%3A0d9efec424d321bf9a8fd576489def9aab3032c0e7709e450536da57a6459b41&amp;source=constructor" width="300" height="225"></iframe>
+                            <a className="FRev" href="https://yandex.ru/maps/org/kazanskiy_federalny_universitet/1297536680/reviews/?ll=49.122135%2C55.792139&tab=reviews&z=17.04" target="_blank" rel="noreferrer">
                                 <img src={yandex} alt="" />
                                 <div>Отзывы на Яндекс.Картах</div>
                             </a>
-                            <a className="FRev" href="https://2gis.ru/kazan/firm/70000001067070658/tab/reviews?m=49.09075%2C55.812403%2F16" target="_blank" rel="noreferrer">
+                            <a className="FRev" href="https://2gis.ru/kazan/firm/2956470803663480/tab/reviews?m=49.122724%2C55.79238%2F16" target="_blank" rel="noreferrer">
                                 <img src={gis} alt="" />
                                 <div>Отзывы на 2ГИС</div>
                             </a>
@@ -302,23 +286,21 @@ function App() {
                         <div className="FLinks">
                             <div className="FLSub">Связаться с нами:</div>
                             <div className="FLNum">
-                                <a href="tel:+79874199676">+7 (987) 419-96-76</a>
+                                <a href="tel:+79999999999">+7 (999) 999-99-99</a>
                                 <span> (Whats App)</span>
                             </div>
                             <div className="FLNum">
-                                <a href="tel:+79874174714 ">+7 (987) 417-47-14</a>
+                                <a href="tel:+79999999999 ">+7 (999) 999-99-99</a>
                                 <span> (Whats App, Telegram)</span>
                             </div>
                             <div className="FLMedia">
-                                <a href="https://vk.com/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={vk} alt="Вконтакте" /></a>
-                                <a href="https://t.me/hockey_sticks_top" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
-                                <a href="https://instagram.com/hockey_sticks_top?igshid=MTNiYzNiMzkwZA==" target="_blank" rel="noreferrer"><img src={inst} alt="Инстаграм" /></a>
+                                <a href="https://vk.com" target="_blank" rel="noreferrer"><img src={vk} alt="Вконтакте" /></a>
+                                <a href="https://t.me/maxvel17" target="_blank" rel="noreferrer"><img src={tg} alt="Телеграм" /></a>
                             </div>
-                            <div className="Conf" id="/confidence" onClick={handleNavigate}>Политика конфиденциальности</div>
                         </div>
                     </div>
                 </div>
-                <div className="FooterBottom">© Все права защищены 2016, HOCKEY STICKS TOP</div>
+                <div className="FooterBottom">© Все права защищены 2024, HOCKEY STICKS</div>
             </footer>
             <div className="MinuteForm None" onClick={closeForm}>
                 <div className="MContainer form">
